@@ -17,8 +17,8 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Railway routes traffic via PORT environment variable
-ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "PostgraduateManagement.dll"]
+ENTRYPOINT ["sh", "-c", "dotnet PostgraduateManagement.dll --urls http://0.0.0.0:${PORT:-8080}"]

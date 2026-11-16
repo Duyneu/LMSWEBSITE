@@ -15,7 +15,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    if (!string.IsNullOrEmpty(connectionString) && 
+    // Nếu chạy trên Linux / Container mà chuỗi kết nối là LocalDB (hoặc rỗng) -> Chuyển sang SQLite tự động
+    if (!OperatingSystem.IsWindows() && (string.IsNullOrEmpty(connectionString) || connectionString.Contains("(localdb)", StringComparison.OrdinalIgnoreCase)))
+    {
+        var dbPath = Path.Combine(AppContext.BaseDirectory, "PostgraduateManagement.db");
+        options.UseSqlite($"Data Source={dbPath}");
+    }
+    else if (!string.IsNullOrEmpty(connectionString) && 
         (connectionString.Contains("Server=", StringComparison.OrdinalIgnoreCase) || 
          (connectionString.Contains("Database=", StringComparison.OrdinalIgnoreCase) && !connectionString.EndsWith(".db", StringComparison.OrdinalIgnoreCase))))
     {
@@ -28,7 +34,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     }
     else
     {
-        if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PostgraduateManagementDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
         }
@@ -105,6 +111,12 @@ using (var scope = app.Services.CreateScope())
 }
 
 // 5. Cấu hình HTTP request pipeline (Tuân thủ chuẩn .NET 8, không dùng MapStaticAssets của .NET 10)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
