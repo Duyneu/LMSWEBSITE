@@ -1,0 +1,102 @@
+@* File: Views/Defense/Schedule.cshtml *@
+@model PostgraduateManagement.ViewModels.ScheduleDefenseViewModel
+@{
+    ViewData["Title"] = "Lập lịch Phiên Bảo vệ Sau đại học";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 fw-bold text-dark mb-1">
+                    <i class="bi bi-calendar-plus text-primary me-2"></i>Lập lịch Phiên Bảo vệ Sau đại học
+                </h2>
+                <p class="text-muted mb-0">Tổ chức thời gian, địa điểm và hội đồng đánh giá luận văn / luận án</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+            </a>
+        </div>
+
+        <!-- CẢNH BÁO / KHÓA QUY CHẾ NGHIÊM NGẶT ĐỐI VỚI ĐỀ TÀI NCKH -->
+        <div class="alert alert-warning border-warning shadow-sm mb-4">
+            <div class="d-flex align-items-start">
+                <i class="bi bi-shield-exclamation text-warning fs-3 me-3 mt-1"></i>
+                <div>
+                    <h5 class="alert-heading fw-bold mb-1">Quy định Cổng Thẩm định Bảo vệ (M05 Graduation Gate):</h5>
+                    <p class="mb-1 small">
+                        Hệ thống thực thi nghiêm ngặt phương thức <code>ValidateForDefenseAsync</code>: <strong>Chỉ đề tài tốt nghiệp sau đại học (<code>IsGraduationCapstone == true</code>)</strong> ở trạng thái hợp lệ mới được cấp phép lập lịch bảo vệ.
+                    </p>
+                    <p class="mb-0 small text-danger fw-semibold">
+                        <i class="bi bi-x-circle-fill me-1"></i>Đề tài nghiên cứu khoa học (NCKH) thuần túy sẽ bị hệ thống từ chối lập lịch bảo vệ tốt nghiệp theo quy chế đào tạo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="card-title mb-0 fw-bold text-dark">
+                    <i class="bi bi-calendar-event text-primary me-2"></i>Thông tin Phiên Bảo vệ
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Schedule" method="post" id="scheduleDefenseForm">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                    <!-- Chọn đề tài tốt nghiệp -->
+                    <div class="mb-4">
+                        <label asp-for="ThesisId" class="form-label fw-semibold text-dark">
+                            Đề tài sau đại học bảo vệ <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="ThesisId" class="form-select form-select-lg" asp-items="Model.AvailableTheses">
+                            <option value="">-- Chọn đề tài tốt nghiệp đủ điều kiện bảo vệ --</option>
+                        </select>
+                        <span asp-validation-for="ThesisId" class="text-danger small"></span>
+                        <div class="form-text">Danh sách chỉ hiển thị các đề tài tốt nghiệp (IsGraduationCapstone = true) đã được phê duyệt đề cương.</div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <!-- Thời gian bảo vệ -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="ScheduledAt" class="form-label fw-semibold text-dark">
+                                Thời gian tổ chức <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="ScheduledAt" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="ScheduledAt" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Địa điểm / Phòng bảo vệ -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold text-dark">
+                                Địa điểm / Phòng bảo vệ <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Location" class="form-control" placeholder="VD: Phòng Bảo vệ Sau đại học A1-302" />
+                            <span asp-validation-for="Location" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú thành phần hội đồng -->
+                    <div class="mb-4">
+                        <label asp-for="CommitteeNotes" class="form-label fw-semibold text-dark">Ghi chú thành phần Hội đồng chuyên môn</label>
+                        <textarea asp-for="CommitteeNotes" class="form-control" rows="3" placeholder="Nhập ghi chú thành phần Hội đồng: Chủ tịch, Thư ký, Người phản biện, Ủy viên..."></textarea>
+                        <span asp-validation-for="CommitteeNotes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">
+                            <i class="bi bi-calendar-check me-1"></i>Xác nhận Lập lịch Bảo vệ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

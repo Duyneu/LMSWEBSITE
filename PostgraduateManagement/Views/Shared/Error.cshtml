@@ -1,0 +1,23 @@
+@* File: Views/Shared/Error.cshtml *@
+@{
+    ViewData["Title"] = "Lỗi Hệ thống";
+}
+
+<div class="row justify-content-center py-5">
+    <div class="col-12 col-md-8 text-center">
+        <div class="card shadow-sm border-danger border-opacity-25 p-5 bg-white">
+            <div class="text-danger mb-3">
+                <i class="bi bi-exclamation-triangle-fill" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="h3 fw-bold text-dark mb-2">Đã xảy ra lỗi trong quá trình xử lý</h2>
+            <p class="text-muted mb-4">
+                Hệ thống gặp sự cố không mong muốn khi thực thi yêu cầu của bạn. Vui lòng thử lại sau hoặc liên hệ quản trị viên.
+            </p>
+            <div>
+                <a asp-controller="Thesis" asp-action="Index" class="btn btn-primary px-4">
+                    <i class="bi bi-house-door me-1"></i>Quay lại Trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

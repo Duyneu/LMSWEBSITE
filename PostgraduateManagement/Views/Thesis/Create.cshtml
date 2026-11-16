@@ -1,0 +1,140 @@
+@* File: Views/Thesis/Create.cshtml *@
+@model PostgraduateManagement.ViewModels.CreateThesisViewModel
+@{
+    ViewData["Title"] = "Đăng ký Đề tài Sau đại học";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 fw-bold text-dark mb-1">
+                    <i class="bi bi-plus-circle text-primary me-2"></i>Đăng ký Đề tài Sau đại học
+                </h2>
+                <p class="text-muted mb-0">Thiết lập hồ sơ đề tài tốt nghiệp hoặc đề tài nghiên cứu khoa học</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="card-title mb-0 fw-bold text-dark">
+                    <i class="bi bi-card-text text-primary me-2"></i>Thông tin Hồ sơ Đề tài
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" id="createThesisForm">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                    <!-- Học viên thực hiện -->
+                    <div class="mb-4">
+                        <label asp-for="StudentId" class="form-label fw-semibold text-dark">
+                            Học viên thực hiện <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="StudentId" class="form-select form-select-lg" asp-items="Model.AvailableStudents">
+                            <option value="">-- Chọn học viên sau đại học --</option>
+                        </select>
+                        <span asp-validation-for="StudentId" class="text-danger small"></span>
+                        <div class="form-text">Học viên được liên kết qua mã định danh người học dùng chung (SharedStudentCode).</div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <!-- Mã đề tài -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Code" class="form-label fw-semibold text-dark">
+                                Mã số đề tài <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Code" class="form-control font-monospace" placeholder="VD: LV-2024-001" />
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Loại hình đề tài -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="ThesisType" class="form-label fw-semibold text-dark">
+                                Loại hình đề tài <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="ThesisType" class="form-select" asp-items="Html.GetEnumSelectList<PostgraduateManagement.Models.Enums.ThesisType>()">
+                            </select>
+                            <span asp-validation-for="ThesisType" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Tên đề tài -->
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-semibold text-dark">
+                            Tên đầy đủ của đề tài <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="Title" class="form-control" rows="2" placeholder="Nhập tên đề tài nghiên cứu sau đại học..."></textarea>
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Lĩnh vực nghiên cứu -->
+                    <div class="mb-3">
+                        <label asp-for="Field" class="form-label fw-semibold text-dark">
+                            Lĩnh vực nghiên cứu chuyên môn <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Field" class="form-control" placeholder="VD: Khoa học máy tính &amp; Trí tuệ nhân tạo, Hệ thống thông tin..." />
+                        <span asp-validation-for="Field" class="text-danger small"></span>
+                        <div class="form-text">Lĩnh vực nghiên cứu sẽ được sử dụng để đối sánh thẩm định quy chế và gợi ý phản biện AI.</div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <!-- Ngày bắt đầu -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="StartDate" class="form-label fw-semibold text-dark">
+                                Ngày bắt đầu thực hiện <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Ngày kết thúc -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="EndDate" class="form-label fw-semibold text-dark">
+                                Ngày dự kiến hoàn thành <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Phân định đề tài tốt nghiệp vs NCKH -->
+                    <div class="card bg-light border p-3 mb-4">
+                        <div class="form-check form-switch mb-0">
+                            <input asp-for="IsGraduationCapstone" class="form-check-input fs-5" type="checkbox" id="capstoneSwitch" />
+                            <label class="form-check-label fw-bold text-dark pt-1" for="capstoneSwitch">
+                                Đề tài tốt nghiệp sau đại học (Graduation Capstone)
+                            </label>
+                        </div>
+                        <div class="small text-muted mt-2">
+                            <i class="bi bi-shield-exclamation text-primary me-1"></i>
+                            <strong>Quy chuẩn Module M05:</strong> Chỉ các đề tài được đánh dấu là <em>Đề tài tốt nghiệp</em> mới được phép tham gia luồng thẩm định và bảo vệ tốt nghiệp. Đề tài NCKH thuần túy sẽ bị chặn ở cổng lập lịch bảo vệ.
+                        </div>
+                    </div>
+
+                    <!-- Tóm tắt nghiên cứu -->
+                    <div class="mb-4">
+                        <label asp-for="Abstract" class="form-label fw-semibold text-dark">Tóm tắt mục tiêu &amp; nội dung nghiên cứu</label>
+                        <textarea asp-for="Abstract" class="form-control" rows="4" placeholder="Mô tả tóm tắt nội dung, tính cấp thiết và phương pháp nghiên cứu..."></textarea>
+                        <span asp-validation-for="Abstract" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                            <i class="bi bi-check-lg me-1"></i>Xác nhận đăng ký đề tài
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

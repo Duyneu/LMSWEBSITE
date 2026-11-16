@@ -1,0 +1,111 @@
+@* File: Views/Defense/RecordResult.cshtml *@
+@model PostgraduateManagement.ViewModels.RecordDefenseResultViewModel
+@{
+    ViewData["Title"] = $"Ghi nhận Kết quả Bảo vệ [{Model.ThesisCode}]";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 fw-bold text-dark mb-1">
+                    <i class="bi bi-award-fill text-success me-2"></i>Ghi nhận Kết quả Đánh giá của Hội đồng
+                </h2>
+                <p class="text-muted mb-0">Biên bản ghi nhận điểm số, đánh giá Đạt/Không đạt và kết luận của Hội đồng Sau đại học</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+            </a>
+        </div>
+
+        <!-- Thẻ thông tin phiên bảo vệ & đề tài -->
+        <div class="card shadow-sm border-0 mb-4 bg-white">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-7">
+                        <span class="badge bg-dark font-monospace mb-2">@Model.ThesisCode</span>
+                        <h5 class="fw-bold text-dark mb-1">@Model.ThesisTitle</h5>
+                        <div class="small text-muted">
+                            Học viên thực hiện: <strong class="text-dark">@Model.StudentName</strong>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 mt-3 mt-md-0 border-start ps-md-4">
+                        <div class="small text-muted mb-1">
+                            <i class="bi bi-calendar-event me-1"></i>Thời gian: <strong>@Model.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </div>
+                        <div class="small text-muted">
+                            <i class="bi bi-geo-alt me-1"></i>Địa điểm: <strong>@Model.Location</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form nhập điểm & nhận xét -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="card-title mb-0 fw-bold text-dark">
+                    <i class="bi bi-pencil-square text-primary me-2"></i>Nội dung Đánh giá &amp; Điểm số
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="RecordResult" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="SessionId" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                    <div class="row g-4 mb-4 align-items-center">
+                        <!-- Điểm số (0.0 - 10.0) -->
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Score" class="form-label fw-bold text-dark fs-6">
+                                Điểm số đánh giá (Thang điểm 10.0) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light text-primary fw-bold"><i class="bi bi-percent"></i></span>
+                                <input asp-for="Score" class="form-control text-primary fw-bold fs-4" type="number" step="0.1" min="0.0" max="10.0" placeholder="VD: 8.5" />
+                            </div>
+                            <span asp-validation-for="Score" class="text-danger small"></span>
+                            <div class="form-text">Thang điểm chuẩn từ 0.0 đến 10.0. Điểm đạt tối thiểu là 5.5 theo quy chế đào tạo.</div>
+                        </div>
+
+                        <!-- Đánh giá Đạt / Không đạt -->
+                        <div class="col-12 col-md-6">
+                            <div class="card bg-light border p-3">
+                                <div class="form-check form-switch mb-0">
+                                    <input asp-for="Pass" class="form-check-input fs-5" type="checkbox" id="passSwitch" />
+                                    <label class="form-check-label fw-bold text-dark pt-1" for="passSwitch">
+                                        Đánh giá ĐẠT YÊU CẦU bảo vệ
+                                    </label>
+                                </div>
+                                <div class="small text-muted mt-2">
+                                    Bỏ tích nếu Hội đồng quyết định đề tài Không đạt yêu cầu hoặc phải bảo vệ lại.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nhận xét và kết luận của Hội đồng -->
+                    <div class="mb-4">
+                        <label asp-for="Comments" class="form-label fw-semibold text-dark">
+                            Nhận xét chi tiết &amp; Kết luận của Hội đồng <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="Comments" class="form-control" rows="5" placeholder="Nhập nhận xét về tính cấp thiết, phương pháp nghiên cứu, kết quả đạt được, đóng góp mới và các yêu cầu chỉnh sửa hoàn thiện sau bảo vệ..."></textarea>
+                        <span asp-validation-for="Comments" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-success px-4 fw-semibold shadow-sm">
+                            <i class="bi bi-check-circle-fill me-1"></i>Lưu Kết quả Bảo vệ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

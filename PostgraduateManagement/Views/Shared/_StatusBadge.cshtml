@@ -1,0 +1,76 @@
+@* File: Views/Shared/_StatusBadge.cshtml *@
+@model object
+
+@if (Model is ThesisStatus status)
+{
+    switch (status)
+    {
+        case ThesisStatus.Draft:
+            <span class="badge bg-secondary"><i class="bi bi-pencil-square me-1"></i>Dự thảo</span>
+            break;
+        case ThesisStatus.Registered:
+            <span class="badge bg-info text-dark"><i class="bi bi-bookmark-check me-1"></i>Đã đăng ký</span>
+            break;
+        case ThesisStatus.Approved:
+            <span class="badge bg-primary"><i class="bi bi-check2-circle me-1"></i>Đã phê duyệt</span>
+            break;
+        case ThesisStatus.InProgress:
+            <span class="badge bg-warning text-dark"><i class="bi bi-arrow-repeat me-1"></i>Đang thực hiện</span>
+            break;
+        case ThesisStatus.SubmittedForReview:
+            <span class="badge bg-dark"><i class="bi bi-file-earmark-person me-1"></i>Chờ phản biện &amp; bảo vệ</span>
+            break;
+        case ThesisStatus.Defended:
+            <span class="badge bg-success"><i class="bi bi-award me-1"></i>Đã bảo vệ</span>
+            break;
+        case ThesisStatus.Completed:
+            <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Hoàn thành</span>
+            break;
+        default:
+            <span class="badge bg-secondary">@status.ToString()</span>
+            break;
+    }
+}
+else if (Model is DefenseStatus defenseStatus)
+{
+    switch (defenseStatus)
+    {
+        case DefenseStatus.Scheduled:
+            <span class="badge bg-primary"><i class="bi bi-calendar-event me-1"></i>Đã lên lịch</span>
+            break;
+        case DefenseStatus.InProgress:
+            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Đang diễn ra</span>
+            break;
+        case DefenseStatus.Defended:
+            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Đã bảo vệ</span>
+            break;
+        case DefenseStatus.Cancelled:
+            <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Đã hủy</span>
+            break;
+        default:
+            <span class="badge bg-secondary">@defenseStatus.ToString()</span>
+            break;
+    }
+}
+else if (Model is CheckResult checkResult)
+{
+    switch (checkResult)
+    {
+        case CheckResult.Eligible:
+            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Đủ điều kiện</span>
+            break;
+        case CheckResult.Ineligible:
+            <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Không đủ điều kiện</span>
+            break;
+        case CheckResult.Conditional:
+            <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Có điều kiện</span>
+            break;
+        default:
+            <span class="badge bg-secondary">@checkResult.ToString()</span>
+            break;
+    }
+}
+else if (Model != null)
+{
+    <span class="badge bg-secondary">@Model.ToString()</span>
+}

@@ -1,0 +1,97 @@
+@* File: Views/Document/Upload.cshtml *@
+@model PostgraduateManagement.ViewModels.UploadDocumentViewModel
+@{
+    ViewData["Title"] = $"Tải lên Tài liệu Số hóa [{Model.ThesisCode}]";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 fw-bold text-dark mb-1">
+                    <i class="bi bi-cloud-arrow-up text-primary me-2"></i>Tải lên Tài liệu Số hóa Lưu chiểu
+                </h2>
+                <p class="text-muted mb-0">Nộp lưu chiểu các văn bản bắt buộc phục vụ lưu trữ số hóa sau đại học</p>
+            </div>
+            <a asp-action="Index" asp-route-thesisId="@Model.ThesisId" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+            </a>
+        </div>
+
+        <!-- Thẻ tóm tắt đề tài -->
+        <div class="card shadow-sm border-0 mb-4 bg-white">
+            <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="badge bg-dark font-monospace mb-1">@Model.ThesisCode</span>
+                    <h6 class="fw-bold text-dark mb-0">@Model.ThesisTitle</h6>
+                </div>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">M05 Document Vault</span>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="card-title mb-0 fw-bold text-dark">
+                    <i class="bi bi-file-earmark-arrow-up text-primary me-2"></i>Thông tin Tệp tin Nộp Lưu chiểu
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ThesisId" />
+                    <input type="hidden" asp-for="ThesisCode" />
+                    <input type="hidden" asp-for="ThesisTitle" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                    <!-- Danh mục loại tài liệu bắt buộc -->
+                    <div class="mb-4">
+                        <label asp-for="DocumentType" class="form-label fw-semibold text-dark">
+                            Loại tài liệu bắt buộc <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="DocumentType" class="form-select form-select-lg">
+                            <option value="@((int)PostgraduateManagement.Models.Enums.DocumentType.ThuyetMinh)">1. Thuyết minh đề tài (ThuyetMinh)</option>
+                            <option value="@((int)PostgraduateManagement.Models.Enums.DocumentType.ToanVan)">2. Toàn văn luận văn / luận án (ToanVan)</option>
+                            <option value="@((int)PostgraduateManagement.Models.Enums.DocumentType.BienBanSuaDoi)">3. Biên bản sửa đổi sau bảo vệ (BienBanSuaDoi)</option>
+                        </select>
+                        <span asp-validation-for="DocumentType" class="text-danger small"></span>
+                        <div class="form-text">
+                            <strong>Lưu ý nghiệp vụ:</strong> Tỷ lệ số hóa của Module M05 chỉ tính toán duy nhất trên 03 loại tài liệu bắt buộc này.
+                        </div>
+                    </div>
+
+                    <!-- Tệp tin đính kèm -->
+                    <div class="mb-4">
+                        <label asp-for="File" class="form-label fw-semibold text-dark">
+                            Chọn tệp tin đính kèm <span class="text-danger">*</span>
+                        </label>
+                        <div class="border border-2 border-dashed rounded p-4 text-center bg-light">
+                            <i class="bi bi-file-earmark-pdf fs-1 text-primary d-block mb-2"></i>
+                            <input asp-for="File" class="form-control form-control-lg mx-auto" type="file" accept=".pdf,.docx" style="max-width: 420px;" required />
+                            <div class="small text-muted mt-2">Hỗ trợ định dạng PDF, DOCX (tối đa 20MB). Hệ thống tự động xác thực magic bytes và mã hóa SHA-256.</div>
+                        </div>
+                        <span asp-validation-for="File" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Ghi chú phiên bản -->
+                    <div class="mb-4">
+                        <label asp-for="Notes" class="form-label fw-semibold text-dark">Ghi chú phiên bản tài liệu</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Nhập ghi chú giải trình phiên bản, lần nộp chỉnh sửa..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a asp-action="Index" asp-route-thesisId="@Model.ThesisId" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">
+                            <i class="bi bi-cloud-arrow-up me-1"></i>Xác nhận Tải lên
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

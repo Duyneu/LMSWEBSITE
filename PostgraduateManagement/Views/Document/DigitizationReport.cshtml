@@ -1,0 +1,186 @@
+@* File: Views/Document/DigitizationReport.cshtml *@
+@model PostgraduateManagement.ViewModels.DigitizationReportViewModel
+@{
+    ViewData["Title"] = $"Báo cáo Số hóa Tài liệu [{Model.ThesisCode}]";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 fw-bold text-dark mb-1">
+            <i class="bi bi-file-earmark-bar-graph-fill text-primary me-2"></i>Báo cáo Tiến độ Số hóa Tài liệu
+        </h2>
+        <p class="text-muted mb-0">Hồ sơ thẩm định lưu chiểu và chỉ số số hóa trong phạm vi Module M05</p>
+    </div>
+    <div class="d-flex gap-2 mt-3 mt-md-0">
+        <a asp-action="Index" asp-route-thesisId="@Model.ThesisId" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Quản lý tài liệu
+        </a>
+        <button class="btn btn-outline-dark" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i>In báo cáo
+        </button>
+    </div>
+</div>
+
+<!-- Header thông tin đề tài & người học -->
+<div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-8">
+                <span class="badge bg-dark font-monospace mb-2">@Model.ThesisCode</span>
+                <h4 class="fw-bold text-dark mb-2">@Model.ThesisTitle</h4>
+                <div class="text-muted small">
+                    <i class="bi bi-person me-1"></i>Học viên: <strong class="text-dark">@Model.StudentName</strong>
+                    <span class="mx-2">•</span>
+                    <i class="bi bi-shield-check me-1"></i>Phạm vi: <span class="text-primary fw-semibold">03 tài liệu bắt buộc M05</span>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="p-3 bg-light rounded text-center border">
+                    <span class="small text-muted d-block mb-1">Chỉ số Hoàn thành Số hóa:</span>
+                    <span class="fs-2 fw-bold @(Model.Progress.ProgressPercentage == 100 ? "text-success" : "text-primary")">
+                        @Model.Progress.ProgressPercentage.ToString("F1")%
+                    </span>
+                    <div class="small text-muted mt-1">@Model.Progress.UploadedDocumentsCount / @Model.Progress.TotalRequiredDocuments danh mục bắt buộc</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- THÔNG BÁO RANH GIỚI BẮT BUỘC THEO ĐẶC TẢ M05 -->
+<div class="alert alert-warning border-warning shadow-sm mb-4">
+    <div class="d-flex align-items-start">
+        <i class="bi bi-exclamation-triangle-fill text-warning fs-3 me-3 mt-1"></i>
+        <div>
+            <h6 class="alert-heading fw-bold mb-1">Ranh giới Đo lường Nghiệp vụ (Strict Scoped Metric):</h6>
+            <p class="mb-0 small text-dark">
+                <strong>@Model.Progress.DisclaimerNote</strong>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Thẻ chỉ số chi tiết cho 3 loại văn bản bắt buộc -->
+<div class="row g-4 mb-4">
+    <!-- 1. Thuyết minh -->
+    <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0 @(Model.Progress.HasThuyetMinh ? "border-top border-success border-4" : "border-top border-secondary border-4")">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge @(Model.Progress.HasThuyetMinh ? "bg-success" : "bg-secondary") px-2 py-1">
+                        @(Model.Progress.HasThuyetMinh ? "ĐÃ SỐ HÓA" : "CHƯA NỘP")
+                    </span>
+                    <i class="bi @(Model.Progress.HasThuyetMinh ? "bi-check-circle-fill text-success" : "bi-dash-circle text-muted") fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">1. Thuyết minh đề tài</h5>
+                <p class="small text-muted mb-0">Đề cương nghiên cứu, thuyết minh mục tiêu và phương pháp luận</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Toàn văn -->
+    <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0 @(Model.Progress.HasToanVan ? "border-top border-success border-4" : "border-top border-secondary border-4")">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge @(Model.Progress.HasToanVan ? "bg-success" : "bg-secondary") px-2 py-1">
+                        @(Model.Progress.HasToanVan ? "ĐÃ SỐ HÓA" : "CHƯA NỘP")
+                    </span>
+                    <i class="bi @(Model.Progress.HasToanVan ? "bi-check-circle-fill text-success" : "bi-dash-circle text-muted") fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">2. Toàn văn luận văn / luận án</h5>
+                <p class="small text-muted mb-0">Bản toàn văn công trình nghiên cứu đầy đủ nội dung bảo vệ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Biên bản sửa đổi -->
+    <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0 @(Model.Progress.HasBienBanSuaDoi ? "border-top border-success border-4" : "border-top border-secondary border-4")">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge @(Model.Progress.HasBienBanSuaDoi ? "bg-success" : "bg-secondary") px-2 py-1">
+                        @(Model.Progress.HasBienBanSuaDoi ? "ĐÃ SỐ HÓA" : "CHƯA NỘP")
+                    </span>
+                    <i class="bi @(Model.Progress.HasBienBanSuaDoi ? "bi-check-circle-fill text-success" : "bi-dash-circle text-muted") fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">3. Biên bản sửa đổi sau bảo vệ</h5>
+                <p class="small text-muted mb-0">Biên bản tiếp thu, giải trình chỉnh sửa theo kết luận Hội đồng</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng chi tiết toàn bộ các phiên bản đã tải lên -->
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0 fw-bold text-dark">
+            <i class="bi bi-clock-history text-primary me-2"></i>Lịch sử Phiên bản Nộp Số hóa Lưu chiểu
+        </h5>
+        <span class="badge bg-light text-muted border">@Model.Progress.UploadedDocuments.Count bản ghi</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-secondary small text-uppercase">
+                <tr>
+                    <th>Loại văn bản</th>
+                    <th>Tên tệp</th>
+                    <th>Phiên bản</th>
+                    <th>Thời điểm nộp</th>
+                    <th>Phê duyệt / Xác nhận</th>
+                    <th class="text-end">Tải về</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Progress.UploadedDocuments.Any())
+                {
+                    foreach (var doc in Model.Progress.UploadedDocuments)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge bg-secondary-subtle text-secondary-emphasis border">@doc.DocumentTypeName</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">
+                                    <i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i>@doc.FileName
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border font-monospace">v@doc.Version</span>
+                            </td>
+                            <td class="small text-muted">@doc.UploadedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (doc.IsConfirmed)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success">
+                                        <i class="bi bi-check-circle-fill me-1"></i>@doc.ConfirmedBy
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">
+                                        <i class="bi bi-hourglass me-1"></i>Chờ xác nhận
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a href="@doc.FilePath" class="btn btn-sm btn-outline-primary" download target="_blank">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                            Chưa có tệp tin số hóa nào được ghi nhận cho đề tài này.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
