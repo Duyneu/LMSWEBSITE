@@ -10,12 +10,35 @@ using PostgraduateManagement.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Cấu hình chuỗi kết nối SQL Server và DbContext
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=(localdb)\\mssqllocaldb;Database=PostgraduateManagementDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+// 1. Cấu hình chuỗi kết nối và DbContext (hỗ trợ SQL Server hoặc SQLite linh hoạt khi deploy Cloud/Container)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    if (!string.IsNullOrEmpty(connectionString) && 
+        (connectionString.Contains("Server=", StringComparison.OrdinalIgnoreCase) || 
+         (connectionString.Contains("Database=", StringComparison.OrdinalIgnoreCase) && !connectionString.EndsWith(".db", StringComparison.OrdinalIgnoreCase))))
+    {
+        options.UseSqlServer(connectionString);
+    }
+    else if (!string.IsNullOrEmpty(connectionString) && 
+             (connectionString.Contains(".db", StringComparison.OrdinalIgnoreCase) || connectionString.Contains("Data Source=", StringComparison.OrdinalIgnoreCase)))
+    {
+        options.UseSqlite(connectionString);
+    }
+    else
+    {
+        if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+        {
+            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PostgraduateManagementDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+        }
+        else
+        {
+            var dbPath = Path.Combine(AppContext.BaseDirectory, "PostgraduateManagement.db");
+            options.UseSqlite($"Data Source={dbPath}");
+        }
+    }
+});
 
 // 2. Cấu hình ASP.NET Core Identity cho phân quyền theo vai trò
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

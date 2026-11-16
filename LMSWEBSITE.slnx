@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="LMSWEBSITE.csproj" Id="8e37a05e-1357-413d-8335-56845c65ee47" />
-  <Project Path="PostgraduateManagement.Tests/PostgraduateManagement.Tests.csproj" />
   <Project Path="PostgraduateManagement/PostgraduateManagement.csproj" />
+  <Project Path="PostgraduateManagement.Tests/PostgraduateManagement.Tests.csproj" />
 </Solution>

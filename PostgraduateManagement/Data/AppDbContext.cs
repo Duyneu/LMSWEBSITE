@@ -81,7 +81,8 @@ namespace PostgraduateManagement.Data
             builder.Entity<AcademicPerson>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasIndex(e => e.SharedPersonCode).IsUnique().HasFilter("[SharedPersonCode] IS NOT NULL");
+                var filter = Database.IsSqlite() ? "SharedPersonCode IS NOT NULL" : "[SharedPersonCode] IS NOT NULL";
+                entity.HasIndex(e => e.SharedPersonCode).IsUnique().HasFilter(filter);
                 entity.HasIndex(e => e.ResearchField);
                 entity.HasIndex(e => e.IsExternal);
                 entity.Property(e => e.SharedPersonCode).HasMaxLength(50);
