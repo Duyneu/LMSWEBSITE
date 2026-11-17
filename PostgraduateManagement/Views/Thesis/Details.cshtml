@@ -13,13 +13,13 @@
             @if (Model.IsGraduationCapstone)
             {
                 <span class="badge badge-capstone d-inline-flex align-items-center">
-                    <i class="bi bi-mortarboard-fill me-1"></i>Đề tài tốt nghiệp
+                    Đề tài tốt nghiệp
                 </span>
             }
             else
             {
                 <span class="badge badge-nckh d-inline-flex align-items-center">
-                    <i class="bi bi-flask me-1"></i>Đề tài NCKH (Không bảo vệ tốt nghiệp)
+                    Đề tài NCKH (Không bảo vệ tốt nghiệp)
                 </span>
             }
         </div>
@@ -29,14 +29,14 @@
         @if (Model.ThesisStatus != ThesisStatus.Archived)
         {
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
-                <i class="bi bi-pencil me-1"></i>Chỉnh sửa
+                Chỉnh sửa
             </a>
         }
         @if (Model.ThesisStatus == ThesisStatus.Completed && (User.IsInRole("Admin") || User.IsInRole("Manager")))
         {
             <form asp-action="Archive" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Lưu trữ hồ sơ đề tài? Sau khi lưu trữ sẽ không chỉnh sửa được nữa.');">
                 <button type="submit" class="btn btn-secondary">
-                    <i class="bi bi-archive me-1"></i>Lưu trữ hồ sơ
+                    Lưu trữ hồ sơ
                 </button>
             </form>
         }
@@ -45,7 +45,7 @@
             <form asp-action="Approve" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Xác nhận phê duyệt đề tài này?');">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check-circle me-1"></i>Phê duyệt đề tài
+                    Phê duyệt đề tài
                 </button>
             </form>
         }
@@ -54,24 +54,24 @@
             <form asp-action="SubmitForReview" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Chuyển đề tài sang trạng thái chờ phản biện và bảo vệ?');">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-dark">
-                    <i class="bi bi-send me-1"></i>Nộp phản biện
+                    Nộp phản biện
                 </button>
             </form>
         }
         @if (Model.CanScheduleDefense)
         {
             <a asp-controller="DefenseSession" asp-action="Schedule" asp-route-thesisId="@Model.Id" class="btn btn-primary">
-                <i class="bi bi-calendar-plus me-1"></i>Lập lịch bảo vệ
+                Lập lịch bảo vệ
             </a>
         }
         <a asp-controller="SupervisorAssignment" asp-action="Index" asp-route-thesisId="@Model.Id" class="btn btn-outline-primary">
-            <i class="bi bi-people me-1"></i>Phân công chuyên gia
+            Phân công chuyên gia
         </a>
         <a asp-controller="Document" asp-action="Index" asp-route-thesisId="@Model.Id" class="btn btn-outline-info">
-            <i class="bi bi-cloud-arrow-up me-1"></i>Số hóa tài liệu
+            Số hóa tài liệu
         </a>
         <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>Danh sách
+            Danh sách
         </a>
     </div>
 </div>
@@ -83,14 +83,11 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3">
                 <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-person-badge text-primary me-2"></i>Thông tin Học viên
+                    Thông tin Học viên
                 </h5>
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3 fs-3">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
                     <div>
                         <h6 class="fw-bold mb-0 text-dark fs-5">@Model.StudentName</h6>
                         <span class="text-muted font-monospace">@Model.StudentCode</span>
@@ -98,15 +95,15 @@
                 </div>
                 <ul class="list-group list-group-flush small">
                     <li class="list-group-item d-flex justify-content-between px-0">
-                        <span class="text-muted"><i class="bi bi-envelope me-1"></i>Email:</span>
+                        <span class="text-muted">Email:</span>
                         <span class="fw-semibold">@Model.StudentEmail</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between px-0">
-                        <span class="text-muted"><i class="bi bi-mortarboard me-1"></i>Chuyên ngành:</span>
+                        <span class="text-muted">Chuyên ngành:</span>
                         <span class="fw-semibold">@Model.StudentMajor</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between px-0">
-                        <span class="text-muted"><i class="bi bi-calendar3 me-1"></i>Khóa tuyển sinh:</span>
+                        <span class="text-muted">Khóa tuyển sinh:</span>
                         <span class="fw-semibold">Năm @Model.StudentEnrollmentYear</span>
                     </li>
                 </ul>
@@ -117,7 +114,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3">
                 <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-info-circle text-primary me-2"></i>Thuộc tính Đề tài
+                    Thuộc tính Đề tài
                 </h5>
             </div>
             <div class="card-body">
@@ -142,11 +139,11 @@
                         <span class="text-muted">Quy chế M05:</span>
                         @if (Model.IsGraduationCapstone)
                         {
-                            <span class="text-success fw-bold"><i class="bi bi-check2 me-1"></i>Hợp lệ tham gia bảo vệ</span>
+                            <span class="text-success fw-bold">Hợp lệ tham gia bảo vệ</span>
                         }
                         else
                         {
-                            <span class="text-warning fw-bold"><i class="bi bi-x-circle me-1"></i>Chặn bảo vệ (NCKH)</span>
+                            <span class="text-warning fw-bold">Chặn bảo vệ (NCKH)</span>
                         }
                     </li>
                 </ul>
@@ -163,7 +160,7 @@
             <div class="card shadow-sm border-primary border-opacity-25">
                 <div class="card-header bg-primary bg-opacity-10 py-3">
                     <h5 class="card-title mb-0 fw-bold text-primary">
-                        <i class="bi bi-pie-chart-fill me-2"></i>Tiến độ Số hóa M05
+                        Tiến độ Số hóa M05
                     </h5>
                 </div>
                 <div class="card-body">
@@ -172,7 +169,7 @@
                         <span class="badge bg-primary fs-6">@Model.DigitizationProgress.ProgressPercentage.ToString("F1")%</span>
                     </div>
                     <div class="progress mb-3" style="height: 12px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated @(Model.DigitizationProgress.ProgressPercentage == 100 ? "bg-success" : "bg-primary")"
+                        <div class="progress-bar @(Model.DigitizationProgress.ProgressPercentage == 100 ? "bg-success" : "bg-primary")"
                              role="progressbar"
                              style="width: @Model.DigitizationProgress.ProgressPercentage%;"
                              aria-valuenow="@Model.DigitizationProgress.ProgressPercentage"
@@ -185,7 +182,7 @@
                             <span>1. Thuyết minh đề tài</span>
                             @if (Model.DigitizationProgress.HasThuyetMinh)
                             {
-                                <span class="badge bg-success"><i class="bi bi-check-lg"></i> Đã nộp</span>
+                                <span class="badge bg-success">Đã nộp</span>
                             }
                             else
                             {
@@ -196,7 +193,7 @@
                             <span>2. Toàn văn luận văn/luận án</span>
                             @if (Model.DigitizationProgress.HasToanVan)
                             {
-                                <span class="badge bg-success"><i class="bi bi-check-lg"></i> Đã nộp</span>
+                                <span class="badge bg-success">Đã nộp</span>
                             }
                             else
                             {
@@ -207,7 +204,7 @@
                             <span>3. Biên bản sửa đổi sau bảo vệ</span>
                             @if (Model.DigitizationProgress.HasBienBanSuaDoi)
                             {
-                                <span class="badge bg-success"><i class="bi bi-check-lg"></i> Đã nộp</span>
+                                <span class="badge bg-success">Đã nộp</span>
                             }
                             else
                             {
@@ -216,7 +213,7 @@
                         </li>
                     </ul>
                     <div class="alert alert-warning py-2 px-3 small mt-3 mb-0 border-warning border-opacity-50">
-                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                        
                         @Model.DigitizationProgress.DisclaimerNote
                     </div>
                 </div>
@@ -231,31 +228,31 @@
                 <ul class="nav nav-tabs card-header-tabs m-0 px-3 pt-2" id="thesisTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active fw-semibold" id="assignments-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab" aria-controls="assignments" aria-selected="true">
-                            <i class="bi bi-people me-1"></i>Phân công chuyên gia
+                            Phân công chuyên gia
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.Assignments.Count</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link fw-semibold" id="eligibility-tab" data-bs-toggle="tab" data-bs-target="#eligibility" type="button" role="tab" aria-controls="eligibility" aria-selected="false">
-                            <i class="bi bi-shield-check me-1"></i>Thẩm định điều kiện
+                            Thẩm định điều kiện
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.EligibilityChecks.Count</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link fw-semibold" id="defense-tab" data-bs-toggle="tab" data-bs-target="#defense" type="button" role="tab" aria-controls="defense" aria-selected="false">
-                            <i class="bi bi-mortarboard me-1"></i>Phiên bảo vệ &amp; Điểm số
+                            Phiên bảo vệ &amp; Điểm số
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.DefenseSessions.Count</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link fw-semibold" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">
-                            <i class="bi bi-file-earmark-arrow-up me-1"></i>Tài liệu số hóa
+                            Tài liệu số hóa
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.SubmittedDocuments.Count</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link fw-semibold" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false">
-                            <i class="bi bi-graph-up-arrow me-1"></i>Tiến độ thực hiện
+                            Tiến độ thực hiện
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.ProgressReports.Count</span>
                         </button>
                     </li>
@@ -267,7 +264,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold text-dark mb-0">Danh sách Cán bộ hướng dẫn, Phản biện và Hội đồng</h6>
                         <a asp-controller="SupervisorAssignment" asp-action="Index" asp-route-thesisId="@Model.Id" class="btn btn-sm btn-primary">
-                            <i class="bi bi-person-plus me-1"></i>Quản lý phân công
+                            Quản lý phân công
                         </a>
                     </div>
                     @if (Model.Assignments.Any())
@@ -302,13 +299,13 @@
                                                 @if (assign.IsExternal)
                                                 {
                                                     <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">
-                                                        <i class="bi bi-box-arrow-up-right me-1"></i>Chuyên gia ngoài trường
+                                                        Chuyên gia ngoài trường
                                                     </span>
                                                 }
                                                 else
                                                 {
                                                     <span class="badge bg-success-subtle text-success-emphasis border border-success">
-                                                        <i class="bi bi-building me-1"></i>Nội bộ
+                                                        Nội bộ
                                                     </span>
                                                 }
                                             </td>
@@ -322,7 +319,7 @@
                     else
                     {
                         <div class="alert alert-secondary text-center py-4 mb-0">
-                            <i class="bi bi-people fs-2 d-block mb-2 text-muted"></i>
+                            
                             Đề tài này hiện chưa được phân công cán bộ chuyên môn nào.
                         </div>
                     }
@@ -374,7 +371,7 @@
                     else
                     {
                         <div class="alert alert-secondary text-center py-4 mb-0">
-                            <i class="bi bi-shield-slash fs-2 d-block mb-2 text-muted"></i>
+                            
                             Chưa có dữ liệu thẩm định quy chế cho đề tài này.
                         </div>
                     }
@@ -387,7 +384,7 @@
                         @if (Model.CanScheduleDefense)
                         {
                             <a asp-controller="DefenseSession" asp-action="Schedule" asp-route-thesisId="@Model.Id" class="btn btn-sm btn-primary">
-                                <i class="bi bi-calendar-plus me-1"></i>Lập lịch bảo vệ
+                                Lập lịch bảo vệ
                             </a>
                         }
                     </div>
@@ -399,11 +396,10 @@
                                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="fw-bold text-dark fs-5">
-                                            <i class="bi bi-calendar-event text-primary me-2"></i>@session.ScheduledAt.ToString("dd/MM/yyyy HH:mm")
+                                            @session.ScheduledAt.ToString("dd/MM/yyyy HH:mm")
                                         </span>
-                                        <span class="mx-2 text-muted">•</span>
-                                        <span class="text-secondary">
-                                            <i class="bi bi-geo-alt me-1"></i>@session.Location
+                                        <span class="text-secondary ms-3">
+                                            @session.Location
                                         </span>
                                     </div>
                                     <div>
@@ -440,11 +436,11 @@
                                 else
                                 {
                                     <div class="d-flex justify-content-between align-items-center pt-2">
-                                        <span class="small text-muted"><i class="bi bi-clock me-1"></i>Chưa ghi nhận kết quả điểm số</span>
+                                        <span class="small text-muted">Chưa ghi nhận kết quả điểm số</span>
                                         @if (session.CanRecordResult)
                                         {
                                             <a asp-controller="DefenseSession" asp-action="RecordResult" asp-route-sessionId="@session.Id" class="btn btn-sm btn-outline-success">
-                                                <i class="bi bi-pencil-square me-1"></i>Nhập điểm &amp; Kết luận
+                                                Nhập điểm &amp; Kết luận
                                             </a>
                                         }
                                     </div>
@@ -455,7 +451,7 @@
                     else
                     {
                         <div class="alert alert-secondary text-center py-4 mb-0">
-                            <i class="bi bi-calendar-x fs-2 d-block mb-2 text-muted"></i>
+                            
                             Đề tài này chưa được lập lịch phiên bảo vệ nào.
                         </div>
                     }
@@ -466,7 +462,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold text-dark mb-0">Danh sách văn bản nộp lưu chiểu (Thuộc danh mục bắt buộc M05)</h6>
                         <a asp-controller="Document" asp-action="Upload" asp-route-thesisId="@Model.Id" class="btn btn-sm btn-info text-dark">
-                            <i class="bi bi-upload me-1"></i>Tải lên tài liệu mới
+                            Tải lên tài liệu mới
                         </a>
                     </div>
                     @if (Model.SubmittedDocuments.Any())
@@ -491,7 +487,7 @@
                                                 <span class="badge bg-secondary-subtle text-secondary-emphasis border">@doc.DocumentTypeName</span>
                                             </td>
                                             <td class="fw-semibold text-dark">
-                                                <i class="bi bi-file-earmark-pdf text-danger me-1"></i>@doc.FileName
+                                                @doc.FileName
                                             </td>
                                             <td>
                                                 <span class="badge bg-light text-dark border font-monospace">v@doc.Version</span>
@@ -501,14 +497,14 @@
                                                 @if (doc.IsConfirmed)
                                                 {
                                                     <span class="badge bg-success-subtle text-success border border-success">
-                                                        <i class="bi bi-check-circle me-1"></i>@doc.ConfirmedBy
+                                                        @doc.ConfirmedBy
                                                     </span>
                                                     <div class="small text-muted">@doc.ConfirmedAt?.ToString("dd/MM/yyyy HH:mm")</div>
                                                 }
                                                 else
                                                 {
                                                     <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">
-                                                        <i class="bi bi-hourglass me-1"></i>Chờ duyệt
+                                                        Chờ duyệt
                                                     </span>
                                                 }
                                             </td>
@@ -526,7 +522,7 @@
                     else
                     {
                         <div class="alert alert-secondary text-center py-4 mb-0">
-                            <i class="bi bi-file-earmark-x fs-2 d-block mb-2 text-muted"></i>
+                            
                             Chưa có tài liệu số hóa nào được nộp cho đề tài này.
                         </div>
                     }
@@ -538,7 +534,7 @@
 
                     @if (Model.CanReportProgress)
                     {
-                        <form asp-action="AddProgressReport" method="post" class="card bg-light border p-3 mb-4">
+                        <form asp-action="AddProgressReport" method="post" class="note-panel mb-4">
                             <input type="hidden" name="thesisId" value="@Model.Id" />
                             <div class="row g-3">
                                 <div class="col-12 col-md-9">
@@ -551,7 +547,7 @@
                                 </div>
                             </div>
                             <div class="text-end mt-3">
-                                <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-send me-1"></i>Gửi báo cáo</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Gửi báo cáo</button>
                             </div>
                         </form>
                     }
@@ -563,7 +559,7 @@
                             {
                                 <li class="list-group-item">
                                     <div class="d-flex justify-content-between flex-wrap gap-2 mb-1">
-                                        <span class="small text-muted">@r.SubmittedAt.ToString("dd/MM/yyyy HH:mm") · @r.SubmittedBy</span>
+                                        <span class="small text-muted">@r.SubmittedBy, <time>@r.SubmittedAt.ToString("dd/MM/yyyy HH:mm")</time></span>
                                         <span class="badge bg-primary">@r.PercentComplete%</span>
                                     </div>
                                     <div class="progress mb-2" style="height: 6px;" role="progressbar" aria-label="Mức hoàn thành" aria-valuenow="@r.PercentComplete" aria-valuemin="0" aria-valuemax="100">
@@ -576,7 +572,7 @@
                                         <div class="border-start border-3 border-success ps-3 mt-2 small">
                                             <div class="fw-semibold text-success">Nhận xét của người hướng dẫn</div>
                                             <div style="white-space: pre-line;">@r.SupervisorFeedback</div>
-                                            <div class="text-muted">@r.FeedbackAt?.ToString("dd/MM/yyyy HH:mm") · @r.FeedbackBy</div>
+                                            <div class="text-muted">@r.FeedbackBy, <time>@r.FeedbackAt?.ToString("dd/MM/yyyy HH:mm")</time></div>
                                         </div>
                                     }
                                     @if (Model.CanGiveFeedback)
@@ -594,7 +590,7 @@
                     else
                     {
                         <div class="alert alert-secondary text-center py-4 mb-0">
-                            <i class="bi bi-graph-up fs-2 d-block mb-2 text-muted"></i>
+                            
                             Chưa có báo cáo tiến độ nào.
                         </div>
                     }

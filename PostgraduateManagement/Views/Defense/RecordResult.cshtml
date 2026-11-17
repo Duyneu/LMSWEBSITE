@@ -9,12 +9,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="h3 fw-bold text-dark mb-1">
-                    <i class="bi bi-award-fill text-success me-2"></i>Ghi nhận Kết quả Đánh giá của Hội đồng
+                    Ghi nhận Kết quả Đánh giá của Hội đồng
                 </h2>
                 <p class="text-muted mb-0">Biên bản ghi nhận điểm số, đánh giá Đạt/Không đạt và kết luận của Hội đồng Sau đại học</p>
             </div>
             <a asp-action="Index" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+                Quay lại danh sách
             </a>
         </div>
 
@@ -31,10 +31,10 @@
                     </div>
                     <div class="col-12 col-md-5 mt-3 mt-md-0 border-start ps-md-4">
                         <div class="small text-muted mb-1">
-                            <i class="bi bi-calendar-event me-1"></i>Thời gian: <strong>@Model.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                            Thời gian: <strong>@Model.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
                         </div>
                         <div class="small text-muted">
-                            <i class="bi bi-geo-alt me-1"></i>Địa điểm: <strong>@Model.Location</strong>
+                            Địa điểm: <strong>@Model.Location</strong>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 border-bottom">
                 <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-pencil-square text-primary me-2"></i>Nội dung Đánh giá &amp; Điểm số
+                    Nội dung Đánh giá &amp; Điểm số
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -71,7 +71,7 @@
 
                         <!-- Đánh giá Đạt / Không đạt -->
                         <div class="col-12 col-md-6">
-                            <div class="card bg-light border p-3">
+                            <div class="note-panel">
                                 <div class="form-check form-switch mb-0">
                                     <input asp-for="Pass" class="form-check-input fs-5" type="checkbox" id="passSwitch" />
                                     <label class="form-check-label fw-bold text-dark pt-1" for="passSwitch">
@@ -97,7 +97,7 @@
                     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
                         <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
                         <button type="submit" class="btn btn-success px-4 fw-semibold shadow-sm">
-                            <i class="bi bi-check-circle-fill me-1"></i>Lưu Kết quả Bảo vệ
+                            Lưu Kết quả Bảo vệ
                         </button>
                     </div>
                 </form>
@@ -108,7 +108,7 @@
         <div class="card shadow-sm border-0 mt-4">
             <div class="card-header bg-white py-3 border-bottom">
                 <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-chat-square-text text-primary me-2"></i>Nhận xét của từng thành viên
+                    Nhận xét của từng thành viên
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -125,7 +125,7 @@
                                         {
                                             <span class="badge bg-primary me-2">@c.Score.Value.ToString("F1")</span>
                                         }
-                                        @c.RecordedAt.ToString("dd/MM/yyyy HH:mm") · @c.RecordedBy
+                                        @c.RecordedBy, <time>@c.RecordedAt.ToString("dd/MM/yyyy HH:mm")</time>
                                     </span>
                                 </div>
                                 <div class="mt-1" style="white-space: pre-line;">@c.Content</div>
@@ -159,7 +159,7 @@
                         </div>
                         <div class="d-flex justify-content-end pt-3">
                             <button type="submit" class="btn btn-outline-primary fw-semibold">
-                                <i class="bi bi-plus-lg me-1"></i>Lưu nhận xét
+                                Lưu nhận xét
                             </button>
                         </div>
                     </form>

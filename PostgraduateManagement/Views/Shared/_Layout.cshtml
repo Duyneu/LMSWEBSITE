@@ -1,110 +1,52 @@
 @* File: Views/Shared/_Layout.cshtml *@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string NavClass(string controller) => currentController == controller ? "nav-link active" : "nav-link";
+    string? NavCurrent(string controller) => currentController == controller ? "page" : null;
+}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Quản lý đào tạo sau đại học: đề tài, phân công hướng dẫn, hội đồng bảo vệ và lưu trữ tài liệu." />
     <title>@ViewData["Title"] - Quản lý Sau đại học (M05)</title>
-    <!-- Bootstrap 5 CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Geist+Mono:wght@400&display=swap&subset=vietnamese" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-            --header-bg: #1e293b;
-            --surface-bg: #f8fafc;
-        }
-        body {
-            background-color: var(--surface-bg);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        .nav-link {
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-        .main-content {
-            flex: 1 0 auto;
-        }
-        .card {
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        }
-        .card-header {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            border-top-left-radius: 0.75rem !important;
-            border-top-right-radius: 0.75rem !important;
-        }
-        .footer {
-            background-color: #0f172a;
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-        .badge-capstone {
-            background-color: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
-        .badge-nckh {
-            background-color: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fcd34d;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2" style="background-color: #0f172a !important;">
+    <header class="app-bar">
+        <nav class="navbar navbar-expand-lg" aria-label="Điều hướng chính">
             <div class="container-fluid px-lg-4">
-                <a class="navbar-brand d-flex align-items-center text-white" asp-controller="Thesis" asp-action="Index">
-                    <span class="badge bg-primary me-2 px-2 py-1 fs-6"><i class="bi bi-mortarboard-fill"></i> M05</span>
-                    <span>Hệ thống Quản lý Sau đại học</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-controller="Thesis" asp-action="Index">Quản lý Sau đại học <span class="record-code">M05</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Mở menu điều hướng">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarMain">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "Thesis" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="Thesis" asp-action="Index">
-                                <i class="bi bi-journal-bookmark-fill me-1"></i>Đề tài sau đại học
-                            </a>
+                            <a class="@NavClass("Thesis")" aria-current="@NavCurrent("Thesis")" asp-controller="Thesis" asp-action="Index">Đề tài</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "SupervisorAssignment" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="SupervisorAssignment" asp-action="Index">
-                                <i class="bi bi-people-fill me-1"></i>Phân công chuyên gia
-                            </a>
+                            <a class="@NavClass("SupervisorAssignment")" aria-current="@NavCurrent("SupervisorAssignment")" asp-controller="SupervisorAssignment" asp-action="Index">Phân công</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "DefenseSession" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="DefenseSession" asp-action="Index">
-                                <i class="bi bi-shield-check me-1"></i>Hội đồng &amp; Bảo vệ
-                            </a>
+                            <a class="@NavClass("DefenseSession")" aria-current="@NavCurrent("DefenseSession")" asp-controller="DefenseSession" asp-action="Index">Hội đồng &amp; bảo vệ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "Document" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="Document" asp-action="Index">
-                                <i class="bi bi-cloud-arrow-up-fill me-1"></i>Số hóa tài liệu
-                            </a>
+                            <a class="@NavClass("Document")" aria-current="@NavCurrent("Document")" asp-controller="Document" asp-action="Index">Tài liệu số hóa</a>
                         </li>
                         @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="Student" asp-action="Index">
-                                    <i class="bi bi-person-vcard me-1"></i>Hồ sơ học viên
-                                </a>
+                                <a class="@NavClass("Student")" aria-current="@NavCurrent("Student")" asp-controller="Student" asp-action="Index">Học viên</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link px-3 text-light @(ViewContext.RouteData.Values["controller"]?.ToString() == "Expert" ? "active fw-bold text-warning border-bottom border-warning border-2" : "")" asp-controller="Expert" asp-action="Index">
-                                    <i class="bi bi-person-badge me-1"></i>Chuyên gia
-                                </a>
+                                <a class="@NavClass("Expert")" aria-current="@NavCurrent("Expert")" asp-controller="Expert" asp-action="Index">Chuyên gia</a>
                             </li>
                         }
                     </ul>
@@ -114,31 +56,28 @@
         </nav>
     </header>
 
-    <main role="main" class="main-content py-4">
+    <main role="main" class="py-4">
         <div class="container-fluid px-lg-4">
             @* Hiển thị thông báo trạng thái TempData *@
             @if (TempData["SuccessMessage"] != null)
             {
-                <div class="alert alert-success alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
-                    <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
                     <div>@TempData["SuccessMessage"]</div>
-                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Đóng"></button>
                 </div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
-                    <i class="bi bi-exclamation-octagon-fill fs-5 me-2"></i>
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
                     <div>@TempData["ErrorMessage"]</div>
-                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Đóng"></button>
                 </div>
             }
             @if (TempData["WarningMessage"] != null)
             {
-                <div class="alert alert-warning alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
                     <div>@TempData["WarningMessage"]</div>
-                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Đóng"></button>
                 </div>
             }
 
@@ -146,16 +85,9 @@
         </div>
     </main>
 
-    <footer class="footer py-3 mt-auto border-top border-secondary border-opacity-25">
-        <div class="container-fluid px-lg-4 d-flex flex-wrap justify-content-between align-items-center">
-            <div>
-                <span class="text-white fw-semibold">LMS Postgraduate Management</span> — Module M05 Capability Showcase (.NET 8 MVC)
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-secondary text-light">Clean Architecture</span>
-                <span class="badge bg-info text-dark">AI Reviewer Heuristic</span>
-                <span class="badge bg-success text-white">Strict M05 Digitization Metric</span>
-            </div>
+    <footer class="app-footer">
+        <div class="container-fluid px-lg-4">
+            Quản lý Đào tạo Sau đại học, module M05
         </div>
     </footer>
 

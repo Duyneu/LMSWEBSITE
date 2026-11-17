@@ -7,12 +7,12 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
     <div>
         <h2 class="h3 fw-bold text-dark mb-1">
-            <i class="bi bi-person-badge text-primary me-2"></i>Chuyên gia &amp; Cán bộ khoa học
+            Chuyên gia &amp; Cán bộ khoa học
         </h2>
         <p class="text-muted mb-0">Cán bộ cơ hữu và chuyên gia ngoài trường, dùng cho thẩm định, phân công và gợi ý phản biện</p>
     </div>
     <a asp-action="Create" class="btn btn-primary fw-semibold">
-        <i class="bi bi-plus-lg me-1"></i>Thêm chuyên gia
+        Thêm chuyên gia
     </a>
 </div>
 
@@ -48,7 +48,7 @@
                 @foreach (var p in Model.Experts)
                 {
                     <tr>
-                        <td class="font-monospace">@(p.SharedPersonCode ?? "—")</td>
+                        <td class="font-monospace">@if (p.SharedPersonCode != null) { @p.SharedPersonCode } else { <span class="text-muted">Chưa có mã</span> }</td>
                         <td>
                             <div class="fw-semibold">@p.FullName</div>
                             <div class="small text-muted">@p.Email</div>
@@ -71,11 +71,11 @@
                         </td>
                         <td class="text-end text-nowrap">
                             <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil"></i> Sửa
+                                Sửa
                             </a>
                             <form asp-action="Delete" asp-route-id="@p.Id" method="post" class="d-inline"
                                   onsubmit="return confirm('Xóa chuyên gia này?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
                             </form>
                         </td>
                     </tr>

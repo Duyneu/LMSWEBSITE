@@ -1,0 +1,73 @@
+:root {
+  color-scheme: light;
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.2rem; --text-xl: 1.44rem; --text-2xl: 1.728rem; --text-3xl: 2.074rem;
+  --text-display-s: 1.44rem; --text-display: 1.728rem; --text-section: 1.2rem; --text-title: 1rem; --text-lead: 1rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+  --color-paper: oklch(97% 0.006 55); --color-paper-2: oklch(94.5% 0.007 55); --color-paper-3: oklch(91.5% 0.009 55);
+  --color-ink: oklch(21% 0.012 38); --color-ink-2: oklch(29% 0.013 40); --color-muted: oklch(47% 0.013 45);
+  --color-rule: oklch(87% 0.009 55); --color-rule-2: oklch(81% 0.011 55);
+  --color-accent: oklch(74% 0.125 30); --color-accent-ink: oklch(21% 0.012 38); --color-accent-2: oklch(54% 0.165 29); --color-focus: oklch(54% 0.17 30);
+  --color-cotton: oklch(98.8% 0.0045 80); --color-desk: oklch(94.3% 0.008 64); --color-print: oklch(23% 0.012 38);
+  --color-board: oklch(22% 0.011 40); --color-board-type: oklch(96.5% 0.006 70); --color-paid: oklch(55.5% 0.15 33);
+  --shade: 32% 0.03 50; --lit: 100% 0.005 80; --deep: 7% 0.01 40;
+  /* Be Vietnam Pro replaces General Sans: General Sans has no Vietnamese letters (ư, ơ, ạ, ế...) */
+  --font-display: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif; --font-body: var(--font-display);
+  --font-outlier: "Geist Mono", ui-monospace, monospace;
+  --radius-card: 8px; --radius-input: 6px; --radius-pill: 999px; --radius-stock: 8px; --rule-hair: 1px;
+  --shadow-card: 0 1px 2px oklch(20% 0.01 35 / 0.05);
+  --edge-stock: inset 0 1px 0 oklch(var(--lit) / 0.9), inset 0 -1px 0 oklch(var(--shade) / 0.07), 0 0 0 0.5px oklch(var(--shade) / 0.22), 0 1px 0 oklch(var(--shade) / 0.12);
+  --cast-stock: 6px 5px 10px -6px oklch(var(--shade) / 0.3); --cast-stock-lift: 12px 10px 18px -8px oklch(var(--shade) / 0.3);
+  --press-groove: inset 1px 1.5px 2px oklch(var(--shade) / 0.16), inset -1px -1px 0 oklch(var(--lit) / 0.9), 0 0 0 0.5px oklch(var(--shade) / 0.2);
+  --tracking-display: -0.02em; --display-weight: 600;
+  --control-h: 40px; --control-h-sm: 32px;
+
+  /* Bootstrap 5.3 reads colours as RGB triplets: the Coral tokens above, converted from OKLCH */
+  --rgb-ink: 29, 22, 20; --rgb-ink-2: 49, 41, 38; --rgb-muted: 97, 89, 85; --rgb-board: 31, 25, 23;
+  --rgb-paper: 248, 244, 241; --rgb-paper-2: 241, 236, 232; --rgb-paper-3: 232, 225, 221; --rgb-cotton: 253, 251, 248;
+  --rgb-rule: 217, 211, 207; --rgb-paid: 186, 74, 52; --rgb-error: 190, 35, 35;
+
+  /* Roles mapped onto Bootstrap: ink is the primary action, coral is the settled state, ink board marks a failed one */
+  --bs-font-sans-serif: var(--font-body); --bs-font-monospace: var(--font-outlier); --bs-body-font-family: var(--font-body);
+  --bs-body-font-size: var(--text-sm); --bs-body-line-height: 1.5;
+  --bs-body-bg: var(--color-paper); --bs-body-bg-rgb: var(--rgb-paper);
+  --bs-body-color: var(--color-ink); --bs-body-color-rgb: var(--rgb-ink);
+  --bs-emphasis-color: var(--color-ink); --bs-emphasis-color-rgb: var(--rgb-ink);
+  --bs-secondary-color: var(--color-muted); --bs-secondary-color-rgb: var(--rgb-muted);
+  --bs-secondary-bg: var(--color-paper-2); --bs-secondary-bg-rgb: var(--rgb-paper-2);
+  --bs-tertiary-color: var(--color-muted); --bs-tertiary-bg: var(--color-paper-2); --bs-tertiary-bg-rgb: var(--rgb-paper-2);
+  --bs-heading-color: var(--color-ink);
+  --bs-link-color: var(--color-ink); --bs-link-color-rgb: var(--rgb-ink);
+  --bs-link-hover-color: var(--color-ink-2); --bs-link-hover-color-rgb: var(--rgb-ink-2);
+  --bs-border-color: var(--color-rule); --bs-border-color-translucent: var(--color-rule);
+  --bs-border-radius: var(--radius-input); --bs-border-radius-sm: var(--radius-input); --bs-border-radius-lg: var(--radius-card);
+  --bs-border-radius-xl: var(--radius-card); --bs-border-radius-xxl: var(--radius-card); --bs-border-radius-pill: var(--radius-input);
+  --bs-box-shadow: var(--shadow-card); --bs-box-shadow-sm: var(--shadow-card);
+  --bs-focus-ring-color: color-mix(in oklab, var(--color-focus) 35%, transparent);
+  --bs-form-valid-color: var(--color-paid); --bs-form-valid-border-color: var(--color-paid);
+  --bs-form-invalid-color: var(--color-error); --bs-form-invalid-border-color: var(--color-error);
+
+  --bs-primary: var(--color-board); --bs-primary-rgb: var(--rgb-board);
+  --bs-secondary: var(--color-muted); --bs-secondary-rgb: var(--rgb-muted);
+  --bs-success: var(--color-paid); --bs-success-rgb: var(--rgb-paid);
+  --bs-info: var(--color-paper-3); --bs-info-rgb: var(--rgb-paper-3);
+  --bs-warning: var(--color-paper-3); --bs-warning-rgb: var(--rgb-paper-3);
+  --bs-danger: var(--color-error); --bs-danger-rgb: var(--rgb-error);
+  --bs-light: var(--color-paper-2); --bs-light-rgb: var(--rgb-paper-2);
+  --bs-dark: var(--color-board); --bs-dark-rgb: var(--rgb-board);
+  --bs-white: var(--color-cotton); --bs-white-rgb: var(--rgb-cotton);
+  --bs-black-rgb: var(--rgb-ink);
+
+  --bs-primary-text-emphasis: var(--color-ink); --bs-primary-bg-subtle: var(--color-paper-2); --bs-primary-border-subtle: var(--color-rule-2);
+  --bs-secondary-text-emphasis: var(--color-ink-2); --bs-secondary-bg-subtle: var(--color-paper-2); --bs-secondary-border-subtle: var(--color-rule);
+  --bs-success-text-emphasis: var(--color-paid); --bs-success-bg-subtle: var(--color-cotton); --bs-success-border-subtle: var(--color-paid);
+  --bs-info-text-emphasis: var(--color-ink-2); --bs-info-bg-subtle: var(--color-paper-2); --bs-info-border-subtle: var(--color-rule-2);
+  --bs-warning-text-emphasis: var(--color-ink); --bs-warning-bg-subtle: var(--color-paper-3); --bs-warning-border-subtle: var(--color-rule-2);
+  --bs-danger-text-emphasis: var(--color-error); --bs-danger-bg-subtle: var(--color-paper-2); --bs-danger-border-subtle: var(--color-error);
+  --bs-light-text-emphasis: var(--color-ink-2); --bs-light-bg-subtle: var(--color-paper); --bs-light-border-subtle: var(--color-rule);
+  --bs-dark-text-emphasis: var(--color-ink); --bs-dark-bg-subtle: var(--color-paper-3); --bs-dark-border-subtle: var(--color-rule-2);
+}

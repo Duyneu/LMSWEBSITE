@@ -4,22 +4,11 @@
     ViewData["Title"] = "Đăng nhập Hệ thống Sau đại học";
 }
 
-<div class="row justify-content-center py-4">
-    <div class="col-12 col-md-8 col-lg-5">
-        <div class="text-center mb-4">
-            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex p-3 mb-2 fs-1">
-                <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <h2 class="h3 fw-bold text-dark">Hệ thống Quản lý Sau đại học</h2>
-            <p class="text-muted small">Capability Showcase — Module M05</p>
-        </div>
+<div class="auth-sheet py-4">
+        <h1 class="h3 mb-1">Đăng nhập</h1>
+        <p class="text-muted mb-4">Hệ thống Quản lý Sau đại học, module M05</p>
 
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white py-3 border-bottom text-center">
-                <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-box-arrow-in-right text-primary me-2"></i>Đăng nhập Tài khoản
-                </h5>
-            </div>
+        <div class="card mb-4">
             <div class="card-body p-4">
                 <form asp-action="Login" method="post">
                     <input type="hidden" asp-for="ReturnUrl" />
@@ -29,20 +18,14 @@
                     <!-- Tên đăng nhập / Email -->
                     <div class="mb-3">
                         <label asp-for="Username" class="form-label fw-semibold text-dark">Tên đăng nhập / Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
-                            <input asp-for="Username" id="loginUsername" class="form-control" placeholder="admin@lms.edu.vn" required />
-                        </div>
+                        <input asp-for="Username" id="loginUsername" class="form-control" placeholder="admin@lms.edu.vn" autocomplete="username" required />
                         <span asp-validation-for="Username" class="text-danger small"></span>
                     </div>
 
                     <!-- Mật khẩu -->
                     <div class="mb-3">
                         <label asp-for="Password" class="form-label fw-semibold text-dark">Mật khẩu</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
-                            <input asp-for="Password" id="loginPassword" class="form-control" type="password" placeholder="••••••••" required />
-                        </div>
+                        <input asp-for="Password" id="loginPassword" class="form-control" type="password" autocomplete="current-password" required />
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
@@ -52,27 +35,23 @@
                         <label asp-for="RememberMe" class="form-check-label text-muted small">Ghi nhớ đăng nhập trên thiết bị này</label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm mb-3">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập Hệ thống
+                    <button type="submit" class="btn btn-primary w-100">
+                        Đăng nhập Hệ thống
                     </button>
                 </form>
             </div>
         </div>
 
         <!-- DEMO ACCOUNTS SHOWCASE (TÀI KHOẢN MẪU THỬ NGHIỆM) -->
-        <div class="card shadow-sm border-info border-opacity-50 bg-light">
-            <div class="card-header bg-info bg-opacity-10 py-2 d-flex justify-content-between align-items-center">
-                <span class="fw-bold small text-dark">
-                    <i class="bi bi-people-fill text-info me-1"></i>Tài khoản Demo Thử nghiệm (M05 Showcase)
-                </span>
-                <span class="badge bg-info text-dark small">Click để điền nhanh</span>
-            </div>
+        <section class="card" aria-labelledby="demoHeading">
             <div class="card-body p-3">
+                <h2 id="demoHeading" class="h6 mb-1">Tài khoản Demo Thử nghiệm (M05 Showcase)</h2>
+                <p class="text-muted small mb-3">Bấm một tài khoản để điền nhanh.</p>
                 <div class="d-flex flex-column gap-2">
                     <button type="button" class="btn btn-sm btn-outline-dark text-start d-flex justify-content-between align-items-center btn-fill-demo"
                             data-user="admin@lms.edu.vn" data-pass="Password123!">
                         <div>
-                            <span class="badge bg-danger me-1">Admin</span>
+                            <span class="badge me-1">Admin</span>
                             <strong>admin@lms.edu.vn</strong>
                         </div>
                         <small class="text-muted">Quản trị toàn quyền</small>
@@ -81,7 +60,7 @@
                     <button type="button" class="btn btn-sm btn-outline-dark text-start d-flex justify-content-between align-items-center btn-fill-demo"
                             data-user="manager@lms.edu.vn" data-pass="Password123!">
                         <div>
-                            <span class="badge bg-primary me-1">Manager</span>
+                            <span class="badge me-1">Manager</span>
                             <strong>manager@lms.edu.vn</strong>
                         </div>
                         <small class="text-muted">Quản lý đào tạo SĐH</small>
@@ -90,7 +69,7 @@
                     <button type="button" class="btn btn-sm btn-outline-dark text-start d-flex justify-content-between align-items-center btn-fill-demo"
                             data-user="tung.nt@lms.edu.vn" data-pass="Password123!">
                         <div>
-                            <span class="badge bg-success me-1">Faculty</span>
+                            <span class="badge me-1">Faculty</span>
                             <strong>tung.nt@lms.edu.vn</strong>
                         </div>
                         <small class="text-muted">Giảng viên / GS.TS</small>
@@ -99,7 +78,7 @@
                     <button type="button" class="btn btn-sm btn-outline-dark text-start d-flex justify-content-between align-items-center btn-fill-demo"
                             data-user="an.nv@student.lms.edu.vn" data-pass="Password123!">
                         <div>
-                            <span class="badge bg-warning text-dark me-1">Student</span>
+                            <span class="badge me-1">Student</span>
                             <strong>an.nv@student.lms.edu.vn</strong>
                         </div>
                         <small class="text-muted">Học viên SĐH</small>
@@ -108,18 +87,17 @@
                     <button type="button" class="btn btn-sm btn-outline-dark text-start d-flex justify-content-between align-items-center btn-fill-demo"
                             data-user="que.td@lms.edu.vn" data-pass="Password123!">
                         <div>
-                            <span class="badge bg-dark me-1">Committee</span>
+                            <span class="badge me-1">Committee</span>
                             <strong>que.td@lms.edu.vn</strong>
                         </div>
                         <small class="text-muted">Hội đồng / PGS.TS</small>
                     </button>
                 </div>
-                <div class="text-center text-muted small mt-2">
+                <p class="text-muted small mt-3 mb-0">
                     Mật khẩu chung cho tất cả tài khoản mẫu: <code>Password123!</code>
-                </div>
+                </p>
             </div>
-        </div>
-    </div>
+        </section>
 </div>
 
 @section Scripts {

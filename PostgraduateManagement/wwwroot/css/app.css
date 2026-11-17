@@ -1,0 +1,367 @@
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: Coral (deal 3/3, seed university-staff-tool-track-3e7c·e2bd8059·2026-11-17·r0) · redesign: restyle
+ * nav: kept, a top bar re-set as text tabs · signature: the thesis record, codes in Geist Mono with the settled state pressed in coral · states: kept (alerts, empty tables, validation)
+ * axes: light/grotesk-sans/warm · posture: restrained · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S3 R4 V4 · weakest: S, Bootstrap's grid and components stay under the restyle; made the record codes and the pressed coral state carry the identity */
+/* Hallmark · faces: Be Vietnam Pro over General Sans · General Sans has no Vietnamese letters (ư, ơ, ạ, ế), measured against its cmap */
+/* Hallmark · dismissed 49 · the demo account rows on sign-in hold a role, an email and a description, and wrap on purpose at phone width */
+/* Hallmark · answered F21 · card titles stay h5 under each page h2; the restyle kept every heading level as the views had them */
+/* Hallmark · reworded "Capability Showcase — Module M05" to "Hệ thống Quản lý Sau đại học, module M05" · 19 names the dash, 54 the tagline over the sign-in head */
+/* Hallmark · reworded nav "Đề tài sau đại học, Phân công chuyên gia, Số hóa tài liệu, Hồ sơ học viên" to "Đề tài, Phân công, Tài liệu số hóa, Học viên" · 49 names the long nav labels that wrapped at 1440 */
+/* Hallmark · reworded "ĐÃ SỐ HÓA / CHƯA NỘP" to "Đã số hóa / Chưa nộp" · 67 names the capitals on the status labels */
+/* Hallmark · dropped the footer badges "Clean Architecture", "AI Reviewer Heuristic", "Strict M05 Digitization Metric" and the "AI Heuristic" tag · tech labels, not content a staff member acts on */
+@import url("./tokens.css");
+@import url("./base.css");
+
+/* ---------- Ground and type ---------- */
+body {
+  font-size: var(--text-sm);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+main { flex: 1 0 auto; }
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-ink);
+  max-width: none;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+h2, .h3 { font-size: var(--text-2xl); line-height: 1.15; }
+.h4, h4 { font-size: var(--text-xl); }
+h5, .h5, .card-title { font-size: var(--text-lg); line-height: 1.25; }
+h6, .h6 { font-size: var(--text-md); letter-spacing: 0; }
+.fs-6 { font-size: var(--text-md) !important; }
+small, .small { font-size: var(--text-xs); }
+.text-muted, .text-secondary, .form-text { color: var(--color-muted) !important; }
+.text-dark, .text-body { color: var(--color-ink) !important; }
+.text-primary { color: var(--color-ink) !important; }
+.text-success { color: var(--color-paid) !important; }
+.text-danger { color: var(--color-error) !important; }
+.text-warning, .text-info { color: var(--color-ink-2) !important; }
+.fw-bold { font-weight: 600 !important; }
+.font-monospace, code, kbd { font-family: var(--font-outlier) !important; font-variant-numeric: tabular-nums; }
+code { color: var(--color-ink-2); background: var(--color-paper-2); padding: 0 var(--space-2xs); border-radius: var(--radius-input); }
+a { color: var(--color-ink); text-decoration-color: var(--color-rule-2); }
+a:hover { color: var(--color-ink); text-decoration-color: var(--color-accent-2); }
+.text-decoration-none:hover { text-decoration: underline !important; text-decoration-color: var(--color-accent-2) !important; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; transition: none; }
+
+/* ---------- Top bar ---------- */
+.app-bar {
+  background: var(--color-paper-2);
+  border-bottom: 1px solid var(--color-rule);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky-nav);
+}
+.app-bar .navbar { padding-block: 0; min-height: 56px; }
+.app-bar .navbar-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-md);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  white-space: nowrap;
+  margin-right: var(--space-lg);
+}
+.app-bar .navbar-brand:hover { color: var(--color-ink); }
+.app-bar .nav-link {
+  color: var(--color-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  padding: var(--space-md) var(--space-xs) !important;
+  border-bottom: 2px solid transparent;
+  transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+}
+.app-bar .nav-link:hover { color: var(--color-ink); }
+.app-bar .nav-link.active, .app-bar .nav-link[aria-current="page"] { color: var(--color-ink); border-bottom-color: var(--color-ink); }
+.app-bar .navbar-toggler { border-color: var(--color-rule-2); }
+.app-bar .navbar-toggler-icon { filter: none; }
+.app-bar .dropdown-toggle { color: var(--color-ink); }
+
+/* Page heads: a long title wraps inside its flex row instead of pushing past the edge */
+main .d-flex > div:has(> h1, > h2, > h4) { min-width: 0; flex: 1 1 20rem; }
+
+/* ---------- Footer ---------- */
+.app-footer {
+  border-top: 1px solid var(--color-rule);
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  padding-block: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+/* ---------- Containers: cotton record sheets, one layer ---------- */
+.card {
+  --bs-card-bg: var(--color-cotton);
+  --bs-card-border-color: var(--color-rule);
+  --bs-card-border-radius: var(--radius-card);
+  --bs-card-inner-border-radius: calc(var(--radius-card) - 1px);
+  --bs-card-cap-bg: var(--color-cotton);
+  --bs-card-cap-padding-y: var(--space-md);
+  background: var(--color-cotton);
+  box-shadow: var(--edge-stock);
+  border: 0 !important;
+}
+.card.shadow-sm, .card.shadow, .shadow-sm, .shadow { box-shadow: var(--edge-stock) !important; }
+.card-header { background: var(--color-cotton) !important; border-bottom: 1px solid var(--color-rule) !important; }
+.card-footer { background: var(--color-cotton); border-top: 1px solid var(--color-rule); }
+/* A note set inside a sheet: a ruled panel, never a second card */
+.note-panel {
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-input);
+  padding: var(--space-md);
+}
+.note-panel.is-settled { border-color: var(--color-paid); background: var(--color-cotton); }
+.bg-light { background-color: var(--color-paper-2) !important; }
+.bg-white { background-color: var(--color-cotton) !important; }
+.border, .border-top, .border-bottom, .border-start, .border-end { border-color: var(--color-rule) !important; }
+
+/* ---------- Controls: letterpress cards, app density ---------- */
+.btn {
+  --bs-btn-font-weight: 500;
+  --bs-btn-border-radius: var(--radius-stock);
+  --bs-btn-padding-x: var(--space-md);
+  --bs-btn-focus-box-shadow: none;
+  min-height: var(--control-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+  transition: transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.btn-sm, .btn-group-sm > .btn { min-height: var(--control-h-sm); --bs-btn-padding-x: var(--space-sm); font-size: var(--text-xs); }
+.btn-lg { min-height: 44px; font-size: var(--text-md); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled, .btn.disabled {
+  opacity: 1;
+  transform: none;
+  background-color: var(--color-paper-3);
+  color: var(--color-muted);
+  text-shadow: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Primary: the ink board, label pressed the other way */
+.btn-primary, .btn-dark, .btn-success, .btn-secondary {
+  --bs-btn-color: var(--color-board-type);
+  --bs-btn-bg: var(--color-board);
+  --bs-btn-border-color: var(--color-board);
+  --bs-btn-hover-color: var(--color-board-type);
+  --bs-btn-hover-bg: var(--color-ink-2);
+  --bs-btn-hover-border-color: var(--color-ink-2);
+  --bs-btn-active-color: var(--color-board-type);
+  --bs-btn-active-bg: var(--color-board);
+  --bs-btn-active-border-color: var(--color-board);
+  --bs-btn-disabled-color: var(--color-board-type);
+  --bs-btn-disabled-bg: var(--color-ink-2);
+  --bs-btn-disabled-border-color: var(--color-ink-2);
+  text-shadow: 0 -0.75px 0 var(--color-ink);
+  box-shadow: var(--cast-stock);
+}
+.btn-primary:hover, .btn-dark:hover, .btn-success:hover, .btn-secondary:hover { box-shadow: var(--cast-stock-lift); }
+
+/* Every other button: a cotton card */
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-dark, .btn-outline-success, .btn-outline-info,
+.btn-outline-light, .btn-light, .btn-info, .btn-warning {
+  --bs-btn-color: var(--color-print);
+  --bs-btn-bg: var(--color-cotton);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--color-print);
+  --bs-btn-hover-bg: var(--color-cotton);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--color-print);
+  --bs-btn-active-bg: var(--color-paper-2);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-color: var(--color-muted);
+  --bs-btn-disabled-bg: var(--color-paper-2);
+  --bs-btn-disabled-border-color: transparent;
+  text-shadow: 0.5px 0.75px 0 var(--color-cotton);
+  box-shadow: var(--edge-stock), var(--cast-stock);
+}
+.btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-outline-dark:hover, .btn-outline-success:hover,
+.btn-outline-info:hover, .btn-outline-light:hover, .btn-light:hover, .btn-info:hover, .btn-warning:hover {
+  box-shadow: var(--edge-stock), var(--cast-stock-lift);
+}
+/* Destructive: cotton card, error ink */
+.btn-outline-danger, .btn-danger {
+  --bs-btn-color: var(--color-error);
+  --bs-btn-bg: var(--color-cotton);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--color-error);
+  --bs-btn-hover-bg: var(--color-cotton);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--color-error);
+  --bs-btn-active-bg: var(--color-paper-2);
+  --bs-btn-active-border-color: transparent;
+  box-shadow: var(--edge-stock), var(--cast-stock);
+}
+.table .btn, .btn-group > .btn { white-space: nowrap; }
+.btn-group > .btn { box-shadow: var(--edge-stock); }
+.btn-group > .btn:hover { transform: none; background: var(--color-paper-2); }
+.btn-close:focus-visible { outline: 2px solid var(--color-focus); box-shadow: none; }
+
+/* ---------- Forms ---------- */
+.form-label { font-weight: 500; color: var(--color-ink); font-size: var(--text-sm); }
+.form-control, .form-select {
+  min-height: var(--control-h);
+  border: 1px solid var(--color-rule-2);
+  border-radius: var(--radius-input);
+  background-color: var(--color-cotton);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+}
+.form-control-lg, .form-select-lg { min-height: 44px; font-size: var(--text-md); border-radius: var(--radius-input); }
+.form-control::placeholder { color: var(--color-muted); opacity: 1; }
+.form-control:hover, .form-select:hover { border-color: var(--color-muted); }
+.form-control:focus, .form-select:focus {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent);
+  background-color: var(--color-cotton);
+}
+.form-control:disabled, .form-select:disabled, .form-control[readonly] { background-color: var(--color-paper-2); color: var(--color-muted); }
+.form-control.is-invalid, .input-validation-error { border-color: var(--color-error) !important; }
+.field-validation-error, .text-danger.small { color: var(--color-error) !important; }
+.form-check-input { border-color: var(--color-muted); background-color: var(--color-cotton); }
+.form-check-input:checked { background-color: var(--color-board); border-color: var(--color-board); }
+.form-check-input:focus { border-color: var(--color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent); }
+.form-check-input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.form-check-input:disabled { opacity: 1; background-color: var(--color-paper-3); border-color: var(--color-rule); cursor: not-allowed; }
+.form-check-input:disabled ~ .form-check-label { color: var(--color-muted); cursor: not-allowed; }
+.input-group-text { background: var(--color-paper-2); border-color: var(--color-rule-2); color: var(--color-muted); }
+
+/* ---------- Tables: the register ---------- */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--color-ink);
+  --bs-table-border-color: var(--color-rule);
+  --bs-table-hover-bg: var(--color-paper-2);
+  --bs-table-hover-color: var(--color-ink);
+  --bs-table-striped-bg: var(--color-paper-2);
+  font-size: var(--text-sm);
+}
+.table > thead > tr > th, .table > thead > tr > td, .table-light, .table-light > th, .table-light > td {
+  --bs-table-bg: var(--color-paper-2);
+  --bs-table-color: var(--color-muted);
+  background-color: var(--color-paper-2) !important;
+  color: var(--color-muted) !important;
+  font-weight: 500;
+  font-size: var(--text-xs);
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  border-bottom: 1px solid var(--color-rule-2);
+  white-space: nowrap;
+}
+.table > :not(caption) > * > * { padding: var(--space-sm) var(--space-md); }
+.table-bordered > :not(caption) > * > * { border-color: var(--color-rule); }
+.text-uppercase { text-transform: none !important; }
+
+/* ---------- Status: ink outline; coral pressed for a settled state; ink board for a failed one ---------- */
+.badge {
+  --bs-badge-font-weight: 500;
+  --bs-badge-font-size: var(--text-xs);
+  --bs-badge-border-radius: var(--radius-input);
+  --bs-badge-padding-x: var(--space-xs);
+  --bs-badge-padding-y: var(--space-3xs);
+  color: var(--color-ink-2);
+  background: transparent !important;
+  border: 1px solid var(--color-rule-2) !important;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.badge.bg-success, .badge.bg-success-subtle, .badge.text-bg-success, .badge.badge-settled {
+  color: var(--color-paid) !important;
+  border-color: var(--color-paid) !important;
+  font-weight: 600;
+}
+.badge.bg-danger, .badge.text-bg-danger, .badge.badge-failed {
+  color: var(--color-board-type) !important;
+  background: var(--color-board) !important;
+  border-color: var(--color-board) !important;
+}
+.badge.bg-dark.font-monospace, .badge.font-monospace {
+  white-space: nowrap;
+  color: var(--color-ink) !important;
+  background: var(--color-paper-2) !important;
+  border-color: var(--color-rule) !important;
+  font-weight: 400;
+}
+.rounded-pill { border-radius: var(--radius-input) !important; }
+.badge-capstone, .badge-nckh { color: var(--color-ink-2); }
+
+/* ---------- Alerts and notes ---------- */
+.alert {
+  --bs-alert-border-radius: var(--radius-card);
+  --bs-alert-color: var(--color-ink);
+  --bs-alert-bg: var(--color-paper-2);
+  --bs-alert-border-color: var(--color-rule);
+  --bs-alert-link-color: var(--color-ink);
+  border: 1px solid var(--color-rule-2) !important;
+  box-shadow: none !important;
+}
+.alert-success { --bs-alert-bg: var(--color-cotton); border-color: var(--color-paid) !important; }
+.alert-danger { --bs-alert-color: var(--color-ink); --bs-alert-bg: var(--color-cotton); border-color: var(--color-error) !important; }
+.alert-warning { --bs-alert-bg: var(--color-paper-3); }
+.alert-info, .alert-secondary, .alert-light, .alert-primary { --bs-alert-bg: var(--color-paper-2); }
+
+/* ---------- Tabs, list groups, progress, dropdowns ---------- */
+.nav-tabs {
+  --bs-nav-tabs-border-color: var(--color-rule);
+  --bs-nav-tabs-link-active-bg: transparent;
+  --bs-nav-tabs-link-active-color: var(--color-ink);
+  --bs-nav-tabs-link-active-border-color: transparent;
+  --bs-nav-tabs-link-hover-border-color: transparent;
+  --bs-nav-link-color: var(--color-muted);
+  --bs-nav-link-hover-color: var(--color-ink);
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+.nav-tabs .nav-link {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  white-space: nowrap;
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-xs);
+}
+.nav-tabs .nav-link.active { border-bottom-color: var(--color-ink); }
+.nav-tabs .nav-link .badge { margin-left: var(--space-2xs); }
+.list-group { --bs-list-group-bg: var(--color-cotton); --bs-list-group-border-color: var(--color-rule); --bs-list-group-border-radius: var(--radius-card); }
+.progress { --bs-progress-bg: var(--color-paper-3); --bs-progress-bar-bg: var(--color-ink); --bs-progress-border-radius: var(--radius-input); }
+.progress-bar.bg-success { background-color: var(--color-paid) !important; }
+.dropdown-menu {
+  --bs-dropdown-bg: var(--color-cotton);
+  --bs-dropdown-border-color: var(--color-rule);
+  --bs-dropdown-link-color: var(--color-ink);
+  --bs-dropdown-link-hover-bg: var(--color-paper-2);
+  --bs-dropdown-link-active-bg: var(--color-paper-3);
+  --bs-dropdown-link-active-color: var(--color-ink);
+  --bs-dropdown-border-radius: var(--radius-card);
+  box-shadow: var(--edge-stock), var(--cast-stock);
+  border: 0;
+}
+.dropdown-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.page-link { color: var(--color-ink); background: var(--color-cotton); border-color: var(--color-rule); }
+.page-item.active .page-link { background: var(--color-board); border-color: var(--color-board); color: var(--color-board-type); }
+.page-link:focus-visible { outline: 2px solid var(--color-focus); box-shadow: none; }
+
+/* ---------- Codes and figures ---------- */
+.record-code { font-family: var(--font-outlier); font-variant-numeric: tabular-nums; color: var(--color-ink-2); }
+td .font-monospace, .figure-num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Sign-in page ---------- */
+.auth-sheet { max-width: 420px; margin-inline: auto; }
+
+@media (max-width: 60rem) {
+  .app-bar .nav-link { padding: var(--space-sm) 0 !important; border-bottom: 0; }
+  .app-bar .nav-link.active { text-decoration: underline; text-decoration-color: var(--color-ink); }
+}

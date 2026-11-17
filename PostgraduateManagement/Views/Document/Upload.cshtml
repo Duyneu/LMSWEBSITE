@@ -9,12 +9,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="h3 fw-bold text-dark mb-1">
-                    <i class="bi bi-cloud-arrow-up text-primary me-2"></i>Tải lên Tài liệu Số hóa Lưu chiểu
+                    Tải lên Tài liệu Số hóa Lưu chiểu
                 </h2>
                 <p class="text-muted mb-0">Nộp lưu chiểu các văn bản bắt buộc phục vụ lưu trữ số hóa sau đại học</p>
             </div>
             <a asp-action="Index" asp-route-thesisId="@Model.ThesisId" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+                Quay lại danh sách
             </a>
         </div>
 
@@ -32,7 +32,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 border-bottom">
                 <h5 class="card-title mb-0 fw-bold text-dark">
-                    <i class="bi bi-file-earmark-arrow-up text-primary me-2"></i>Thông tin Tệp tin Nộp Lưu chiểu
+                    Thông tin Tệp tin Nộp Lưu chiểu
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -66,8 +66,7 @@
                             Chọn tệp tin đính kèm <span class="text-danger">*</span>
                         </label>
                         <div class="border border-2 border-dashed rounded p-4 text-center bg-light">
-                            <i class="bi bi-file-earmark-pdf fs-1 text-primary d-block mb-2"></i>
-                            <input asp-for="File" class="form-control form-control-lg mx-auto" type="file" accept=".pdf,.docx" style="max-width: 420px;" required />
+                                                        <input asp-for="File" class="form-control form-control-lg mx-auto" type="file" accept=".pdf,.docx" style="max-width: 420px;" required />
                             <div class="small text-muted mt-2">Hỗ trợ định dạng PDF, DOCX (tối đa 20MB). Hệ thống tự động xác thực magic bytes và mã hóa SHA-256.</div>
                         </div>
                         <span asp-validation-for="File" class="text-danger small"></span>
@@ -83,7 +82,7 @@
                     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
                         <a asp-action="Index" asp-route-thesisId="@Model.ThesisId" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
                         <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">
-                            <i class="bi bi-cloud-arrow-up me-1"></i>Xác nhận Tải lên
+                            Xác nhận Tải lên
                         </button>
                     </div>
                 </form>

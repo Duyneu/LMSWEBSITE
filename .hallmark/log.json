@@ -1,0 +1,30 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "restyle",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "coral",
+  "axes": "light/grotesk-sans/warm",
+  "hero": "none (app)",
+  "nav": "top bar, text tabs",
+  "footer": "one plain line",
+  "imagery": "none",
+  "photos": [],
+  "entry": "thesis list",
+  "fingerprint": "coral-app-restyle-bootstrap-vars",
+  "sections": [
+   "Thesis",
+   "SupervisorAssignment",
+   "DefenseSession",
+   "Document",
+   "Student",
+   "Expert",
+   "Account"
+  ],
+  "signature": "record codes in Geist Mono, settled state pressed in coral",
+  "waived": [],
+  "prompt": "a university staff tool to track postgraduate theses",
+  "date": "2026-11-17"
+ }
+]
