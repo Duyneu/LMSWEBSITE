@@ -22,7 +22,6 @@
             </div>
             <div class="card-body p-4">
                 <form asp-action="Login" method="post">
-                    @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="ReturnUrl" />
 
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3 py-2 small" role="alert"></div>
