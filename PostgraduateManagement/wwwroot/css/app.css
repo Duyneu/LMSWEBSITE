@@ -205,9 +205,34 @@ main .d-flex > div:has(> h1, > h2, > h4) { min-width: 0; flex: 1 1 20rem; }
   --bs-btn-active-border-color: transparent;
   box-shadow: var(--edge-stock), var(--cast-stock);
 }
-.table .btn, .btn-group > .btn { white-space: nowrap; }
-.btn-group > .btn { box-shadow: var(--edge-stock); }
-.btn-group > .btn:hover { transform: none; background: var(--color-paper-2); }
+.table .btn { white-space: nowrap; }
+td:has(> .row-actions) { white-space: nowrap; width: 1%; }
+.table .col-title { min-width: 16rem; }
+
+/* Row actions: the row's next step as a labelled card on the left, then quiet icon tools in a fixed order,
+   right-aligned so the tools line up down the column whether or not a row has a step */
+.row-actions { display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--space-2xs); }
+.row-actions > form { display: contents; }
+.row-actions > form > .btn, .row-actions > .btn-sm { margin-right: var(--space-xs); }
+.btn-icon {
+  --bs-btn-color: var(--color-ink-2);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--color-ink);
+  --bs-btn-hover-bg: var(--color-paper-3);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--color-ink);
+  --bs-btn-active-bg: var(--color-rule);
+  --bs-btn-active-border-color: transparent;
+  width: var(--control-h-sm);
+  min-height: var(--control-h-sm);
+  padding: 0;
+  border-radius: var(--radius-input);
+  box-shadow: none;
+  text-shadow: none;
+}
+.btn-icon:hover, .btn-icon:active { transform: none; }
+.btn-icon .bi { font-size: var(--text-md); line-height: 1; }
 .btn-close:focus-visible { outline: 2px solid var(--color-focus); box-shadow: none; }
 
 /* ---------- Forms ---------- */
@@ -261,7 +286,7 @@ main .d-flex > div:has(> h1, > h2, > h4) { min-width: 0; flex: 1 1 20rem; }
   border-bottom: 1px solid var(--color-rule-2);
   white-space: nowrap;
 }
-.table > :not(caption) > * > * { padding: var(--space-sm) var(--space-md); }
+.table > :not(caption) > * > * { padding: var(--space-sm); }
 .table-bordered > :not(caption) > * > * { border-color: var(--color-rule); }
 .text-uppercase { text-transform: none !important; }
 

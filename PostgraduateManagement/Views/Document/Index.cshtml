@@ -194,21 +194,19 @@
                                                 }
                                             </td>
                                             <td class="text-end">
-                                                <div class="btn-group btn-group-sm">
-                                                    <a asp-action="Download" asp-route-id="@doc.Id" class="btn btn-outline-primary" title="Tải xuống tệp tin an toàn">
-                                                        <i class="bi bi-download"></i>
-                                                    </a>
+                                                <div class="row-actions">
                                                     @if (!doc.IsConfirmed && (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Committee")))
                                                     {
-                                                        <form asp-action="Confirm" method="post" class="d-inline" onsubmit="return confirm('Xác nhận tính hợp lệ của tài liệu nộp này?');">
+                                                        <form asp-action="Confirm" method="post" onsubmit="return confirm('Xác nhận tính hợp lệ của tài liệu nộp này?');">
                                                             @Html.AntiForgeryToken()
                                                             <input type="hidden" name="documentId" value="@doc.Id" />
                                                             <input type="hidden" name="thesisId" value="@Model.ThesisId" />
-                                                            <button type="submit" class="btn btn-outline-success" title="Phê duyệt văn bản">
-                                                                <i class="bi bi-check-lg"></i>
-                                                            </button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="Phê duyệt văn bản">Duyệt</button>
                                                         </form>
                                                     }
+                                                    <a asp-action="Download" asp-route-id="@doc.Id" class="btn btn-icon" title="Tải xuống tệp tin an toàn" aria-label="Tải xuống tệp tin an toàn">
+                                                        <i class="bi bi-download" aria-hidden="true"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>

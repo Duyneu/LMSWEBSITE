@@ -58,7 +58,7 @@
                     <th scope="col" style="width: 200px;">Địa điểm</th>
                     <th scope="col" style="width: 150px;">Trạng thái</th>
                     <th scope="col" style="width: 180px;">Kết quả đánh giá</th>
-                    <th scope="col" class="text-end" style="width: 180px;">Thao tác</th>
+                    <th scope="col" class="text-end">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,15 +122,13 @@
                                 }
                             </td>
                             <td class="text-end">
-                                <div class="btn-group btn-group-sm">
+                                <div class="row-actions">
                                     @if (s.CanRecordResult)
                                     {
-                                        <a asp-action="RecordResult" asp-route-sessionId="@s.Id" class="btn btn-outline-success" title="Ghi nhận điểm số &amp; nhận xét">
-                                            Nhập điểm
-                                        </a>
+                                        <a asp-action="RecordResult" asp-route-sessionId="@s.Id" class="btn btn-sm btn-outline-secondary" title="Ghi nhận điểm số &amp; nhận xét">Nhập điểm</a>
                                     }
-                                    <a asp-controller="Thesis" asp-action="Details" asp-route-id="@s.ThesisId" class="btn btn-outline-secondary" title="Xem đề tài">
-                                        <i class="bi bi-eye"></i>
+                                    <a asp-controller="Thesis" asp-action="Details" asp-route-id="@s.ThesisId" class="btn btn-icon" title="Xem đề tài" aria-label="Xem đề tài">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
                                     </a>
                                 </div>
                             </td>

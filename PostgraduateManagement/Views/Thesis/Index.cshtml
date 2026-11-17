@@ -57,13 +57,13 @@
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light text-secondary small">
                 <tr>
-                    <th scope="col" style="width: 130px;">Mã số</th>
-                    <th scope="col">Tên đề tài &amp; Học viên</th>
-                    <th scope="col" style="width: 140px;">Loại hình</th>
+                    <th scope="col">Mã số</th>
+                    <th scope="col" class="col-title">Tên đề tài &amp; Học viên</th>
+                    <th scope="col">Loại hình</th>
                     <th scope="col">Hướng dẫn</th>
-                    <th scope="col" style="width: 150px;">Phân loại</th>
-                    <th scope="col" style="width: 180px;">Trạng thái</th>
-                    <th scope="col" class="text-end" style="width: 220px;">Thao tác</th>
+                    <th scope="col">Phân loại</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col" class="text-end">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -112,33 +112,29 @@
                                 <partial name="_StatusBadge" model="item.ThesisStatus" />
                             </td>
                             <td class="text-end">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Xem chi tiết">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-secondary" title="Chỉnh sửa">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                <div class="row-actions">
                                     @if (item.ThesisStatus == ThesisStatus.Draft || item.ThesisStatus == ThesisStatus.Registered)
                                     {
-                                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn phê duyệt đề cương đề tài này?');">
+                                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bạn có chắc muốn phê duyệt đề cương đề tài này?');">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-outline-success" title="Phê duyệt đề tài">
-                                                <i class="bi bi-check-lg"></i>
-                                            </button>
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="Phê duyệt đề tài">Phê duyệt</button>
                                         </form>
                                     }
                                     @if (item.ThesisStatus == ThesisStatus.Approved || item.ThesisStatus == ThesisStatus.InProgress)
                                     {
-                                        <form asp-action="SubmitForReview" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Chuyển đề tài sang trạng thái chờ phản biện và bảo vệ?');">
+                                        <form asp-action="SubmitForReview" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Chuyển đề tài sang trạng thái chờ phản biện và bảo vệ?');">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-outline-dark" title="Nộp phản biện &amp; bảo vệ">
-                                                <i class="bi bi-send"></i>
-                                            </button>
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="Nộp phản biện &amp; bảo vệ">Nộp phản biện</button>
                                         </form>
                                     }
-                                    <a asp-controller="SupervisorAssignment" asp-action="Index" asp-route-thesisId="@item.Id" class="btn btn-outline-info" title="Phân công chuyên gia">
-                                        <i class="bi bi-people"></i>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-icon" title="Xem chi tiết" aria-label="Xem chi tiết">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-icon" title="Chỉnh sửa" aria-label="Chỉnh sửa">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a asp-controller="SupervisorAssignment" asp-action="Index" asp-route-thesisId="@item.Id" class="btn btn-icon" title="Phân công chuyên gia" aria-label="Phân công chuyên gia">
+                                        <i class="bi bi-people" aria-hidden="true"></i>
                                     </a>
                                 </div>
                             </td>
