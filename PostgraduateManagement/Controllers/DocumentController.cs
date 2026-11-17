@@ -21,6 +21,7 @@ namespace PostgraduateManagement.Controllers
     /// Thuyết minh đề tài, Toàn văn luận văn/luận án, Biên bản sửa đổi sau bảo vệ.
     /// Quản lý tiến độ số hóa kèm thông điệp cảnh báo ranh giới quy chuẩn đào tạo.
     /// </summary>
+    [Authorize]
     public class DocumentController : Controller
     {
         private const long MaxFileSize = 20 * 1024 * 1024; // 20 MB
