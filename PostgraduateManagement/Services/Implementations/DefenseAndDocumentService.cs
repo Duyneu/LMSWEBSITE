@@ -241,7 +241,8 @@ namespace PostgraduateManagement.Services.Implementations
                 Sha256Hash = document.Sha256Hash,
                 Version = document.Version,
                 UploadedAt = document.UploadedAt,
-                ConfirmedBy = document.ConfirmedBy
+                ConfirmedBy = document.ConfirmedBy,
+                ConfirmedAt = document.ConfirmedAt
             };
         }
 
@@ -259,6 +260,7 @@ namespace PostgraduateManagement.Services.Implementations
             }
 
             document.ConfirmedBy = string.IsNullOrWhiteSpace(confirmedBy) ? "Hội đồng sau đại học" : confirmedBy.Trim();
+            document.ConfirmedAt = DateTime.UtcNow;
             _unitOfWork.SubmittedDocuments.Update(document);
 
             // Kiểm tra nếu đề tài đã Defended và cả 3 loại tài liệu bắt buộc đều đã được nộp và duyệt,
@@ -351,7 +353,8 @@ namespace PostgraduateManagement.Services.Implementations
                 Sha256Hash = d.Sha256Hash,
                 Version = d.Version,
                 UploadedAt = d.UploadedAt,
-                ConfirmedBy = d.ConfirmedBy
+                ConfirmedBy = d.ConfirmedBy,
+                ConfirmedAt = d.ConfirmedAt
             }).ToList();
 
             return new DigitizationProgressDto

@@ -26,11 +26,17 @@ namespace PostgraduateManagement.ViewModels
         public string ResearchField { get; set; } = string.Empty;
         public string? Workplace { get; set; }
         public AssignmentRole Role { get; set; }
+        public CommitteePosition? CommitteePosition { get; set; }
         public string RoleName => Role switch
         {
             AssignmentRole.Supervisor => "Người hướng dẫn",
             AssignmentRole.Reviewer => "Người phản biện",
-            AssignmentRole.Committee => "Ủy viên hội đồng",
+            AssignmentRole.Committee => CommitteePosition switch
+            {
+                Models.Enums.CommitteePosition.Chair => "Chủ tịch hội đồng",
+                Models.Enums.CommitteePosition.Secretary => "Thư ký hội đồng",
+                _ => "Ủy viên hội đồng"
+            },
             _ => Role.ToString()
         };
         public bool IsExternal { get; set; }
@@ -149,6 +155,9 @@ namespace PostgraduateManagement.ViewModels
         [Required(ErrorMessage = "Vui lòng chọn vai trò phân công")]
         [Display(Name = "Vai trò chuyên môn")]
         public AssignmentRole Role { get; set; } = AssignmentRole.Supervisor;
+
+        [Display(Name = "Chức danh trong hội đồng")]
+        public CommitteePosition? CommitteePosition { get; set; }
 
         [Display(Name = "Chuyên gia ngoài trường")]
         public bool IsExternal { get; set; }

@@ -182,7 +182,8 @@ namespace PostgraduateManagement.Controllers
                         Sha256Hash = d.Sha256Hash,
                         Version = d.Version,
                         UploadedAt = d.UploadedAt,
-                        ConfirmedBy = d.ConfirmedBy
+                        ConfirmedBy = d.ConfirmedBy,
+                        ConfirmedAt = d.ConfirmedAt
                     }).ToList();
 
                     model.UploadForm = new UploadDocumentViewModel
@@ -229,6 +230,12 @@ namespace PostgraduateManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(UploadDocumentViewModel model)
         {
+            if ((await _unitOfWork.Theses.GetByIdAsync(model.ThesisId))?.ThesisStatus == ThesisStatus.Archived)
+            {
+                TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không nhận thêm tài liệu.";
+                return RedirectToAction(nameof(Index), new { thesisId = model.ThesisId });
+            }
+
             await ValidateUploadedFileAsync(model.File);
 
             if (!ModelState.IsValid)
@@ -446,6 +453,7 @@ namespace PostgraduateManagement.Controllers
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager,Committee")]
         public async Task<IActionResult> Confirm(int documentId, int thesisId)
         {
             try

@@ -90,6 +90,7 @@ namespace PostgraduateManagement.Controllers
                         ResearchField = a.ResearchField,
                         Workplace = a.Workplace,
                         Role = a.Role,
+                        CommitteePosition = a.CommitteePosition,
                         IsExternal = a.IsExternal,
                         AssignedAt = a.AssignedAt,
                         Notes = a.Notes
@@ -175,7 +176,8 @@ namespace PostgraduateManagement.Controllers
                     model.ThesisId,
                     model.PersonId,
                     model.Role,
-                    model.IsExternal);
+                    model.IsExternal,
+                    model.CommitteePosition);
 
                 if (success)
                 {

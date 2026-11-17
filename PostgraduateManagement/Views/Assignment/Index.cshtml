@@ -158,9 +158,34 @@
                             <select name="Role" id="assignRole" class="form-select">
                                 <option value="1">Người hướng dẫn (Supervisor)</option>
                                 <option value="2">Người phản biện (Reviewer)</option>
-                                <option value="3">Ủy viên hội đồng (Committee)</option>
+                                <option value="3">Thành viên hội đồng (Committee)</option>
                             </select>
                         </div>
+
+                        <!-- Chức danh trong hội đồng: chỉ hiện khi chọn vai trò Hội đồng -->
+                        <div class="mb-3 d-none" id="committeePositionGroup">
+                            <label for="committeePosition" class="form-label fw-semibold text-dark">Chức danh trong hội đồng</label>
+                            <select name="CommitteePosition" id="committeePosition" class="form-select" disabled>
+                                <option value="1">Chủ tịch hội đồng</option>
+                                <option value="2">Thư ký hội đồng</option>
+                                <option value="3" selected>Ủy viên hội đồng</option>
+                            </select>
+                            <div class="form-text">Mỗi hội đồng có tối đa một Chủ tịch và một Thư ký.</div>
+                        </div>
+                        <script>
+                            (function () {
+                                var role = document.getElementById("assignRole");
+                                var group = document.getElementById("committeePositionGroup");
+                                var pos = document.getElementById("committeePosition");
+                                function sync() {
+                                    var isCommittee = role.value === "3";
+                                    group.classList.toggle("d-none", !isCommittee);
+                                    pos.disabled = !isCommittee; // không gửi chức danh khi không phải hội đồng
+                                }
+                                role.addEventListener("change", sync);
+                                sync();
+                            })();
+                        </script>
 
                         <!-- Chọn chuyên gia -->
                         <div class="mb-3">

@@ -70,6 +70,11 @@ namespace PostgraduateManagement.Services.DTOs
         public string? ConfirmedBy { get; set; }
 
         /// <summary>
+        /// Thời điểm xác nhận tài liệu (null nếu chưa xác nhận)
+        /// </summary>
+        public DateTime? ConfirmedAt { get; set; }
+
+        /// <summary>
         /// Trạng thái đã được xác nhận hay chưa
         /// </summary>
         public bool IsConfirmed => !string.IsNullOrEmpty(ConfirmedBy);

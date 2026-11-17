@@ -73,6 +73,7 @@ namespace PostgraduateManagement.Services.DTOs
             ThesisStatus.SubmittedForReview => "Chờ phản biện & bảo vệ",
             ThesisStatus.Defended => "Đã bảo vệ",
             ThesisStatus.Completed => "Hoàn thành",
+            ThesisStatus.Archived => "Đã lưu trữ",
             _ => ThesisStatus.ToString()
         };
 

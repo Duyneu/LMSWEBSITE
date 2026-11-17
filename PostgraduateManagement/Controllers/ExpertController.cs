@@ -107,7 +107,8 @@ namespace PostgraduateManagement.Controllers
             if (expert == null) return NotFound();
 
             if ((await _unitOfWork.ThesisAssignments.FindAsync(a => a.PersonId == id)).Any()
-                || (await _unitOfWork.EligibilityChecks.FindAsync(c => c.PersonId == id)).Any())
+                || (await _unitOfWork.EligibilityChecks.FindAsync(c => c.PersonId == id)).Any()
+                || (await _unitOfWork.DefenseComments.FindAsync(c => c.PersonId == id)).Any())
             {
                 TempData["ErrorMessage"] = $"Không thể xóa {expert.FullName}: chuyên gia đã có phân công hoặc lịch sử thẩm định.";
                 return RedirectToAction(nameof(Index));

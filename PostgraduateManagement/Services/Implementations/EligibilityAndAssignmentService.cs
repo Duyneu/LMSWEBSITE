@@ -179,8 +179,11 @@ namespace PostgraduateManagement.Services.Implementations
         /// Chặn tuyệt đối xung đột lợi ích: Supervisor không được đồng thời là Reviewer hoặc Committee, và ngược lại.
         /// Ghi vết kiểm toán (AuditLog) vào hệ thống.
         /// </summary>
-        public async Task<bool> AssignPersonAsync(int thesisId, int personId, AssignmentRole role, bool isExternal)
+        public async Task<bool> AssignPersonAsync(int thesisId, int personId, AssignmentRole role, bool isExternal, CommitteePosition? position = null)
         {
+            // Chức danh hội đồng chỉ có nghĩa với vai trò Committee; mặc định là Ủy viên
+            position = role == AssignmentRole.Committee ? position ?? CommitteePosition.Member : null;
+
             var thesis = await _unitOfWork.Theses.GetByIdAsync(thesisId);
             if (thesis == null)
             {
@@ -212,10 +215,24 @@ namespace PostgraduateManagement.Services.Implementations
                 }
             }
 
+            // Mỗi hội đồng chỉ có một Chủ tịch và một Thư ký
+            if (position == CommitteePosition.Chair || position == CommitteePosition.Secretary)
+            {
+                var taken = await _unitOfWork.ThesisAssignments.FindAsync(a =>
+                    a.ThesisId == thesisId && a.PersonId != personId &&
+                    a.Role == AssignmentRole.Committee && a.CommitteePosition == position);
+                if (taken.Any())
+                {
+                    var title = position == CommitteePosition.Chair ? "Chủ tịch" : "Thư ký";
+                    throw new InvalidOperationException($"Hội đồng của đề tài này đã có {title}. Hãy hủy phân công cũ trước khi chỉ định người khác.");
+                }
+            }
+
             // Kiểm tra phân công đã tồn tại hay chưa
             var existing = existingAssignments.FirstOrDefault(a => a.Role == role);
             if (existing != null)
             {
+                existing.CommitteePosition = position;
                 existing.IsExternal = isExternal;
                 existing.AssignedAt = DateTime.UtcNow;
                 _unitOfWork.ThesisAssignments.Update(existing);
@@ -227,6 +244,7 @@ namespace PostgraduateManagement.Services.Implementations
                     ThesisId = thesisId,
                     PersonId = personId,
                     Role = role,
+                    CommitteePosition = position,
                     IsExternal = isExternal,
                     AssignedAt = DateTime.UtcNow,
                     Notes = $"Phân công vai trò {role} theo quyết định chuyên môn."
@@ -293,6 +311,7 @@ namespace PostgraduateManagement.Services.Implementations
                 ResearchField = a.Person?.ResearchField ?? string.Empty,
                 Workplace = a.Person?.Workplace,
                 Role = a.Role,
+                CommitteePosition = a.CommitteePosition,
                 IsExternal = a.IsExternal,
                 AssignedAt = a.AssignedAt,
                 Notes = a.Notes

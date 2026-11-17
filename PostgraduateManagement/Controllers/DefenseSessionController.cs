@@ -251,7 +251,71 @@ namespace PostgraduateManagement.Controllers
                 Comments = session.DefenseResult?.Comments ?? "Hội đồng đánh giá đề tài đáp ứng đầy đủ yêu cầu của một công trình nghiên cứu sau đại học."
             };
 
+            FillMemberComments(model, session);
             return View("~/Views/Defense/RecordResult.cshtml", model);
+        }
+
+        /// <summary>
+        /// Ghi nhận (hoặc cập nhật) nhận xét riêng của một phản biện / thành viên hội đồng trong phiên bảo vệ.
+        /// Người nhận xét phải đang được phân công Phản biện hoặc Hội đồng cho đề tài.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMemberComment(int sessionId, int personId, string content, decimal? score)
+        {
+            var session = await _unitOfWork.DefenseSessions.GetSessionWithDetailsAsync(sessionId);
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            if (!await CanManageDefenseAsync(session.ThesisId))
+            {
+                return Forbid();
+            }
+
+            var isMember = session.Thesis?.Assignments.Any(a => a.PersonId == personId &&
+                (a.Role == AssignmentRole.Reviewer || a.Role == AssignmentRole.Committee)) ?? false;
+            if (!isMember)
+            {
+                TempData["ErrorMessage"] = "Người nhận xét phải là phản biện hoặc thành viên hội đồng của đề tài.";
+            }
+            else if (string.IsNullOrWhiteSpace(content) || content.Length > 2000)
+            {
+                TempData["ErrorMessage"] = "Nội dung nhận xét không được để trống và tối đa 2000 ký tự.";
+            }
+            else if (score is < 0 or > 10)
+            {
+                TempData["ErrorMessage"] = "Điểm phải nằm trong thang 0 - 10.";
+            }
+            else
+            {
+                var recorder = User.Identity?.Name ?? "Thư ký Hội đồng";
+                var existing = session.MemberComments.FirstOrDefault(c => c.PersonId == personId);
+                if (existing != null)
+                {
+                    existing.Content = content.Trim();
+                    existing.Score = score;
+                    existing.RecordedBy = recorder;
+                    existing.RecordedAt = DateTime.UtcNow;
+                    _unitOfWork.DefenseComments.Update(existing);
+                }
+                else
+                {
+                    await _unitOfWork.DefenseComments.AddAsync(new Models.Entities.DefenseComment
+                    {
+                        SessionId = sessionId,
+                        PersonId = personId,
+                        Content = content.Trim(),
+                        Score = score,
+                        RecordedBy = recorder
+                    });
+                }
+                await _unitOfWork.CompleteAsync();
+                TempData["SuccessMessage"] = "Đã lưu nhận xét của thành viên.";
+            }
+
+            return RedirectToAction(nameof(RecordResult), new { sessionId });
         }
 
         /// <summary>
@@ -272,6 +336,8 @@ namespace PostgraduateManagement.Controllers
                 _logger.LogWarning("Từ chối truy cập: Người dùng '{User}' không có quyền ghi nhận kết quả bảo vệ phiên {SessionId}", User.Identity?.Name, model.SessionId);
                 return Forbid();
             }
+
+            FillMemberComments(model, session);
 
             if (!ModelState.IsValid)
             {
@@ -303,6 +369,27 @@ namespace PostgraduateManagement.Controllers
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Nạp nhận xét từng thành viên và danh sách phản biện / hội đồng của đề tài vào view model.
+        /// </summary>
+        private static void FillMemberComments(RecordDefenseResultViewModel model, Models.Entities.DefenseSession session)
+        {
+            model.MemberComments = session.MemberComments.OrderBy(c => c.RecordedAt).ToList();
+
+            var assignments = session.Thesis?.Assignments
+                .Where(a => a.Role == AssignmentRole.Reviewer || a.Role == AssignmentRole.Committee)
+                ?? Enumerable.Empty<Models.Entities.ThesisAssignment>();
+
+            model.CommentablePersons = assignments
+                .GroupBy(a => a.PersonId)
+                .Select(g => new SelectListItem
+                {
+                    Value = g.Key.ToString(),
+                    Text = $"{g.First().Person?.FullName} ({string.Join(", ", g.Select(a => new AssignmentItemViewModel { Role = a.Role, CommitteePosition = a.CommitteePosition }.RoleName))})"
+                })
+                .ToList();
+        }
 
         /// <summary>
         /// Kiểm tra quyền quản lý phiên bảo vệ (Lập lịch / Ghi nhận kết quả):

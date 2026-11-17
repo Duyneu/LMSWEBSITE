@@ -28,6 +28,8 @@ namespace PostgraduateManagement.Repositories.Implementations
                     .ThenInclude(t => t!.Assignments)
                         .ThenInclude(a => a.Person)
                 .Include(s => s.DefenseResult)
+                .Include(s => s.MemberComments)
+                    .ThenInclude(c => c.Person)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 

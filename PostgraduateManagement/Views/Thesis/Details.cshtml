@@ -26,9 +26,20 @@
         <h2 class="h3 fw-bold text-dark mb-0">@Model.Title</h2>
     </div>
     <div class="d-flex flex-wrap gap-2 mt-3 mt-md-0">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
-            <i class="bi bi-pencil me-1"></i>Chỉnh sửa
-        </a>
+        @if (Model.ThesisStatus != ThesisStatus.Archived)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Chỉnh sửa
+            </a>
+        }
+        @if (Model.ThesisStatus == ThesisStatus.Completed && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+        {
+            <form asp-action="Archive" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Lưu trữ hồ sơ đề tài? Sau khi lưu trữ sẽ không chỉnh sửa được nữa.');">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="bi bi-archive me-1"></i>Lưu trữ hồ sơ
+                </button>
+            </form>
+        }
         @if (Model.CanApprove)
         {
             <form asp-action="Approve" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Xác nhận phê duyệt đề tài này?');">
@@ -240,6 +251,12 @@
                         <button class="nav-link fw-semibold" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">
                             <i class="bi bi-file-earmark-arrow-up me-1"></i>Tài liệu số hóa
                             <span class="badge bg-secondary rounded-pill ms-1">@Model.SubmittedDocuments.Count</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false">
+                            <i class="bi bi-graph-up-arrow me-1"></i>Tiến độ thực hiện
+                            <span class="badge bg-secondary rounded-pill ms-1">@Model.ProgressReports.Count</span>
                         </button>
                     </li>
                 </ul>
@@ -486,6 +503,7 @@
                                                     <span class="badge bg-success-subtle text-success border border-success">
                                                         <i class="bi bi-check-circle me-1"></i>@doc.ConfirmedBy
                                                     </span>
+                                                    <div class="small text-muted">@doc.ConfirmedAt?.ToString("dd/MM/yyyy HH:mm")</div>
                                                 }
                                                 else
                                                 {
@@ -510,6 +528,74 @@
                         <div class="alert alert-secondary text-center py-4 mb-0">
                             <i class="bi bi-file-earmark-x fs-2 d-block mb-2 text-muted"></i>
                             Chưa có tài liệu số hóa nào được nộp cho đề tài này.
+                        </div>
+                    }
+                </div>
+
+                <!-- Tab 5: Tiến độ thực hiện -->
+                <div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+                    <h6 class="fw-bold text-dark mb-3">Báo cáo tiến độ và nhận xét của người hướng dẫn</h6>
+
+                    @if (Model.CanReportProgress)
+                    {
+                        <form asp-action="AddProgressReport" method="post" class="card bg-light border p-3 mb-4">
+                            <input type="hidden" name="thesisId" value="@Model.Id" />
+                            <div class="row g-3">
+                                <div class="col-12 col-md-9">
+                                    <label for="progressContent" class="form-label fw-semibold small">Công việc đã thực hiện</label>
+                                    <textarea id="progressContent" name="content" rows="2" maxlength="2000" class="form-control" required></textarea>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <label for="progressPercent" class="form-label fw-semibold small">Hoàn thành (%)</label>
+                                    <input id="progressPercent" name="percentComplete" type="number" min="0" max="100" value="@(Model.ProgressReports.FirstOrDefault()?.PercentComplete ?? 0)" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-send me-1"></i>Gửi báo cáo</button>
+                            </div>
+                        </form>
+                    }
+
+                    @if (Model.ProgressReports.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var r in Model.ProgressReports)
+                            {
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between flex-wrap gap-2 mb-1">
+                                        <span class="small text-muted">@r.SubmittedAt.ToString("dd/MM/yyyy HH:mm") · @r.SubmittedBy</span>
+                                        <span class="badge bg-primary">@r.PercentComplete%</span>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 6px;" role="progressbar" aria-label="Mức hoàn thành" aria-valuenow="@r.PercentComplete" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" style="width: @r.PercentComplete%"></div>
+                                    </div>
+                                    <div style="white-space: pre-line;">@r.Content</div>
+
+                                    @if (!string.IsNullOrEmpty(r.SupervisorFeedback))
+                                    {
+                                        <div class="border-start border-3 border-success ps-3 mt-2 small">
+                                            <div class="fw-semibold text-success">Nhận xét của người hướng dẫn</div>
+                                            <div style="white-space: pre-line;">@r.SupervisorFeedback</div>
+                                            <div class="text-muted">@r.FeedbackAt?.ToString("dd/MM/yyyy HH:mm") · @r.FeedbackBy</div>
+                                        </div>
+                                    }
+                                    @if (Model.CanGiveFeedback)
+                                    {
+                                        <form asp-action="GiveProgressFeedback" method="post" class="mt-2 d-flex gap-2">
+                                            <input type="hidden" name="reportId" value="@r.Id" />
+                                            <input name="feedback" maxlength="2000" class="form-control form-control-sm" placeholder="@(string.IsNullOrEmpty(r.SupervisorFeedback) ? "Nhận xét báo cáo này..." : "Cập nhật nhận xét...")" aria-label="Nhận xét báo cáo tiến độ" required />
+                                            <button type="submit" class="btn btn-sm btn-outline-success text-nowrap">Lưu nhận xét</button>
+                                        </form>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary text-center py-4 mb-0">
+                            <i class="bi bi-graph-up fs-2 d-block mb-2 text-muted"></i>
+                            Chưa có báo cáo tiến độ nào.
                         </div>
                     }
                 </div>

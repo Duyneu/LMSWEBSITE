@@ -148,5 +148,15 @@ namespace PostgraduateManagement.ViewModels
         [StringLength(2000, ErrorMessage = "Nhận xét tối đa 2000 ký tự")]
         [Display(Name = "Nhận xét và kết luận của Hội đồng")]
         public string Comments { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Nhận xét riêng của từng phản biện / thành viên hội đồng (chỉ hiển thị)
+        /// </summary>
+        public List<PostgraduateManagement.Models.Entities.DefenseComment> MemberComments { get; set; } = new();
+
+        /// <summary>
+        /// Danh sách phản biện và thành viên hội đồng của đề tài, dùng cho form thêm nhận xét
+        /// </summary>
+        public List<SelectListItem> CommentablePersons { get; set; } = new();
     }
 }

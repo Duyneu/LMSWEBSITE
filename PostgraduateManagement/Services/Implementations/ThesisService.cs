@@ -112,6 +112,7 @@ namespace PostgraduateManagement.Services.Implementations
                     ResearchField = a.Person?.ResearchField ?? string.Empty,
                     Workplace = a.Person?.Workplace,
                     Role = a.Role,
+                    CommitteePosition = a.CommitteePosition,
                     IsExternal = a.IsExternal,
                     AssignedAt = a.AssignedAt,
                     Notes = a.Notes
@@ -165,7 +166,8 @@ namespace PostgraduateManagement.Services.Implementations
                     FilePath = sd.FilePath,
                     Version = sd.Version,
                     UploadedAt = sd.UploadedAt,
-                    ConfirmedBy = sd.ConfirmedBy
+                    ConfirmedBy = sd.ConfirmedBy,
+                    ConfirmedAt = sd.ConfirmedAt
                 }).ToList() ?? new List<SubmittedDocumentDto>()
             };
 

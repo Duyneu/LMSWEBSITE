@@ -62,6 +62,16 @@ namespace PostgraduateManagement.Data
         /// </summary>
         public DbSet<AuditLog> AuditLogs { get; set; } = null!;
 
+        /// <summary>
+        /// Bảng nhận xét của từng thành viên phản biện / hội đồng trong phiên bảo vệ
+        /// </summary>
+        public DbSet<DefenseComment> DefenseComments { get; set; } = null!;
+
+        /// <summary>
+        /// Bảng báo cáo tiến độ thực hiện đề tài
+        /// </summary>
+        public DbSet<ProgressReport> ProgressReports { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Bắt buộc gọi phương thức cấu hình gốc cho Identity
@@ -204,6 +214,42 @@ namespace PostgraduateManagement.Data
                 entity.Property(e => e.EntityName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.EntityId).HasMaxLength(100);
                 entity.Property(e => e.Details).HasMaxLength(4000);
+            });
+
+            // 10. Cấu hình bảng DefenseComment: mỗi thành viên một nhận xét cho mỗi phiên bảo vệ
+            builder.Entity<DefenseComment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.SessionId, e.PersonId }).IsUnique();
+                entity.Property(e => e.Content).IsRequired().HasMaxLength(2000);
+                entity.Property(e => e.RecordedBy).HasMaxLength(100);
+                entity.Property(e => e.Score).HasPrecision(4, 2);
+
+                entity.HasOne(c => c.Session)
+                      .WithMany(s => s.MemberComments)
+                      .HasForeignKey(c => c.SessionId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(c => c.Person)
+                      .WithMany()
+                      .HasForeignKey(c => c.PersonId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // 11. Cấu hình bảng ProgressReport
+            builder.Entity<ProgressReport>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.ThesisId);
+                entity.Property(e => e.Content).IsRequired().HasMaxLength(2000);
+                entity.Property(e => e.SubmittedBy).HasMaxLength(100);
+                entity.Property(e => e.SupervisorFeedback).HasMaxLength(2000);
+                entity.Property(e => e.FeedbackBy).HasMaxLength(100);
+
+                entity.HasOne(r => r.Thesis)
+                      .WithMany(t => t.ProgressReports)
+                      .HasForeignKey(r => r.ThesisId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

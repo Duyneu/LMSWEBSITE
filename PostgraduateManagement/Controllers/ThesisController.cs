@@ -140,6 +140,7 @@ namespace PostgraduateManagement.Controllers
                     ResearchField = a.ResearchField,
                     Workplace = a.Workplace,
                     Role = a.Role,
+                    CommitteePosition = a.CommitteePosition,
                     IsExternal = a.IsExternal,
                     AssignedAt = a.AssignedAt,
                     Notes = a.Notes
@@ -192,12 +193,104 @@ namespace PostgraduateManagement.Controllers
                     FilePath = sd.FilePath,
                     Version = sd.Version,
                     UploadedAt = sd.UploadedAt,
-                    ConfirmedBy = sd.ConfirmedBy
+                    ConfirmedBy = sd.ConfirmedBy,
+                    ConfirmedAt = sd.ConfirmedAt
                 }).ToList(),
                 DigitizationProgress = detailDto.DigitizationProgress
             };
 
+            model.ProgressReports = (await _unitOfWork.ProgressReports.FindAsync(r => r.ThesisId == id))
+                .OrderByDescending(r => r.SubmittedAt).ToList();
+            var notArchived = detailDto.ThesisStatus != ThesisStatus.Archived;
+            // Thành viên hội đồng chỉ xem; học viên, người hướng dẫn và quản lý được báo cáo
+            model.CanReportProgress = notArchived && !User.IsInRole("Committee");
+            // Quyền chỉnh sửa đề tài = Admin/Manager hoặc người hướng dẫn trực tiếp
+            model.CanGiveFeedback = notArchived && await CanAccessThesisAsync(id, detailDto.StudentEmail, isEdit: true);
+
             return View(model);
+        }
+
+        /// <summary>
+        /// Gửi báo cáo tiến độ thực hiện đề tài (bước "theo dõi thực hiện").
+        /// Học viên của đề tài, người hướng dẫn và quản lý được gửi báo cáo.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProgressReport(int thesisId, string content, int percentComplete)
+        {
+            var thesis = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(thesisId);
+            if (thesis == null)
+            {
+                return NotFound();
+            }
+
+            if (User.IsInRole("Committee") || !await CanAccessThesisAsync(thesis.Id, thesis.Student?.Email ?? string.Empty, isEdit: false))
+            {
+                return Forbid();
+            }
+
+            if (thesis.ThesisStatus == ThesisStatus.Archived)
+            {
+                TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không nhận thêm báo cáo tiến độ.";
+            }
+            else if (string.IsNullOrWhiteSpace(content) || content.Length > 2000 || percentComplete is < 0 or > 100)
+            {
+                TempData["ErrorMessage"] = "Báo cáo cần có nội dung (tối đa 2000 ký tự) và mức hoàn thành từ 0 đến 100%.";
+            }
+            else
+            {
+                await _unitOfWork.ProgressReports.AddAsync(new ProgressReport
+                {
+                    ThesisId = thesisId,
+                    Content = content.Trim(),
+                    PercentComplete = percentComplete,
+                    SubmittedBy = User.Identity?.Name ?? "Không rõ"
+                });
+                await _unitOfWork.CompleteAsync();
+                TempData["SuccessMessage"] = "Đã gửi báo cáo tiến độ.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id = thesisId });
+        }
+
+        /// <summary>
+        /// Người hướng dẫn (hoặc quản lý) phản hồi một báo cáo tiến độ.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GiveProgressFeedback(int reportId, string feedback)
+        {
+            var report = await _unitOfWork.ProgressReports.GetByIdAsync(reportId);
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            var thesis = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(report.ThesisId);
+            if (thesis == null || !await CanAccessThesisAsync(thesis.Id, thesis.Student?.Email ?? string.Empty, isEdit: true))
+            {
+                return Forbid();
+            }
+
+            if (thesis.ThesisStatus == ThesisStatus.Archived)
+            {
+                TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không thể phản hồi thêm.";
+            }
+            else if (string.IsNullOrWhiteSpace(feedback) || feedback.Length > 2000)
+            {
+                TempData["ErrorMessage"] = "Nhận xét không được để trống và tối đa 2000 ký tự.";
+            }
+            else
+            {
+                report.SupervisorFeedback = feedback.Trim();
+                report.FeedbackBy = User.Identity?.Name;
+                report.FeedbackAt = DateTime.UtcNow;
+                _unitOfWork.ProgressReports.Update(report);
+                await _unitOfWork.CompleteAsync();
+                TempData["SuccessMessage"] = "Đã lưu nhận xét cho báo cáo tiến độ.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id = report.ThesisId });
         }
 
         /// <summary>
@@ -284,6 +377,12 @@ namespace PostgraduateManagement.Controllers
                 return Forbid();
             }
 
+            if (thesis.ThesisStatus == ThesisStatus.Archived)
+            {
+                TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không thể chỉnh sửa.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
             var model = new EditThesisViewModel
             {
                 Id = thesis.Id,
@@ -329,6 +428,12 @@ namespace PostgraduateManagement.Controllers
             {
                 _logger.LogWarning("Từ chối truy cập: Người dùng '{User}' không có quyền cập nhật đề tài {Id}", User.Identity?.Name, id);
                 return Forbid();
+            }
+
+            if (thesis.ThesisStatus == ThesisStatus.Archived)
+            {
+                TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không thể chỉnh sửa.";
+                return RedirectToAction(nameof(Details), new { id });
             }
 
             thesis.Title = model.Title.Trim();
@@ -404,6 +509,31 @@ namespace PostgraduateManagement.Controllers
                 TempData["ErrorMessage"] = "Không thể chuyển trạng thái đề tài.";
             }
 
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        /// <summary>
+        /// Lưu trữ hồ sơ đề tài: bước cuối của quy trình M05, chỉ áp dụng cho đề tài đã Hoàn thành.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> Archive(int id)
+        {
+            var thesis = await _unitOfWork.Theses.GetByIdAsync(id);
+            if (thesis == null)
+            {
+                return NotFound();
+            }
+
+            if (thesis.ThesisStatus != ThesisStatus.Completed)
+            {
+                TempData["ErrorMessage"] = "Chỉ lưu trữ được đề tài đã hoàn thành (đã bảo vệ và nộp đủ tài liệu).";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            await _thesisService.TransitionStatusAsync(id, ThesisStatus.Archived);
+            TempData["SuccessMessage"] = $"Đã lưu trữ hồ sơ đề tài '{thesis.Code}'.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -500,6 +630,7 @@ namespace PostgraduateManagement.Controllers
                     ThesisStatus.SubmittedForReview => "Chờ phản biện & bảo vệ",
                     ThesisStatus.Defended => "Đã bảo vệ",
                     ThesisStatus.Completed => "Hoàn thành",
+                    ThesisStatus.Archived => "Đã lưu trữ",
                     _ => status.ToString()
                 };
 

@@ -53,5 +53,10 @@ namespace PostgraduateManagement.Models.Entities
         /// Kết quả và biên bản đánh giá của phiên bảo vệ (quan hệ 1-1)
         /// </summary>
         public virtual DefenseResult? DefenseResult { get; set; }
+
+        /// <summary>
+        /// Nhận xét của từng thành viên phản biện / hội đồng trong phiên
+        /// </summary>
+        public virtual ICollection<DefenseComment> MemberComments { get; set; } = new List<DefenseComment>();
     }
 }

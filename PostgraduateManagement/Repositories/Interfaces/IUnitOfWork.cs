@@ -55,6 +55,16 @@ namespace PostgraduateManagement.Repositories.Interfaces
         IRepository<AuditLog> AuditLogs { get; }
 
         /// <summary>
+        /// Kho lưu trữ nhận xét của từng thành viên trong phiên bảo vệ
+        /// </summary>
+        IRepository<DefenseComment> DefenseComments { get; }
+
+        /// <summary>
+        /// Kho lưu trữ báo cáo tiến độ thực hiện đề tài
+        /// </summary>
+        IRepository<ProgressReport> ProgressReports { get; }
+
+        /// <summary>
         /// Lưu tất cả thay đổi trong phiên làm việc vào cơ sở dữ liệu
         /// </summary>
         /// <returns>Số lượng bản ghi bị ảnh hưởng</returns>

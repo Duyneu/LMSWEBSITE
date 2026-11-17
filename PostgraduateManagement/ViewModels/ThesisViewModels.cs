@@ -36,6 +36,7 @@ namespace PostgraduateManagement.ViewModels
             ThesisStatus.SubmittedForReview => "Chờ phản biện & bảo vệ",
             ThesisStatus.Defended => "Đã bảo vệ",
             ThesisStatus.Completed => "Hoàn thành",
+            ThesisStatus.Archived => "Đã lưu trữ",
             _ => ThesisStatus.ToString()
         };
         public int StudentId { get; set; }
@@ -144,6 +145,7 @@ namespace PostgraduateManagement.ViewModels
             ThesisStatus.SubmittedForReview => "Chờ phản biện & bảo vệ",
             ThesisStatus.Defended => "Đã bảo vệ",
             ThesisStatus.Completed => "Hoàn thành",
+            ThesisStatus.Archived => "Đã lưu trữ",
             _ => ThesisStatus.ToString()
         };
         public bool IsGraduationCapstone { get; set; }
@@ -164,6 +166,11 @@ namespace PostgraduateManagement.ViewModels
         public List<DocumentItemViewModel> SubmittedDocuments { get; set; } = new List<DocumentItemViewModel>();
         public DigitizationProgressDto? DigitizationProgress { get; set; }
 
+        // Theo dõi thực hiện: báo cáo tiến độ (mới nhất trước) và quyền thao tác của người xem
+        public List<PostgraduateManagement.Models.Entities.ProgressReport> ProgressReports { get; set; } = new();
+        public bool CanReportProgress { get; set; }
+        public bool CanGiveFeedback { get; set; }
+
         // Cờ điều khiển các nút thao tác quy trình nghiệp vụ
         public bool CanApprove => ThesisStatus == ThesisStatus.Draft || ThesisStatus == ThesisStatus.Registered;
         public bool CanSubmitForReview => ThesisStatus == ThesisStatus.Approved || ThesisStatus == ThesisStatus.InProgress;
@@ -183,11 +190,17 @@ namespace PostgraduateManagement.ViewModels
         public AcademicDegree AcademicDegree { get; set; }
         public bool IsExternal { get; set; }
         public AssignmentRole Role { get; set; }
+        public CommitteePosition? CommitteePosition { get; set; }
         public string RoleName => Role switch
         {
             AssignmentRole.Supervisor => "Hướng dẫn",
             AssignmentRole.Reviewer => "Phản biện",
-            AssignmentRole.Committee => "Hội đồng",
+            AssignmentRole.Committee => CommitteePosition switch
+            {
+                Models.Enums.CommitteePosition.Chair => "Chủ tịch hội đồng",
+                Models.Enums.CommitteePosition.Secretary => "Thư ký hội đồng",
+                _ => "Ủy viên hội đồng"
+            },
             _ => Role.ToString()
         };
         public CheckResult Result { get; set; }

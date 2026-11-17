@@ -39,6 +39,11 @@ namespace PostgraduateManagement.Models.Enums
         /// <summary>
         /// Đã hoàn tất chỉnh sửa sau bảo vệ và nộp lưu chiểu đầy đủ
         /// </summary>
-        Completed = 6
+        Completed = 6,
+
+        /// <summary>
+        /// Đã lưu trữ hồ sơ: bước cuối của quy trình, đề tài chỉ còn xem, không chỉnh sửa
+        /// </summary>
+        Archived = 7
     }
 }

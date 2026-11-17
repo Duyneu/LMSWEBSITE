@@ -21,6 +21,8 @@ namespace PostgraduateManagement.Repositories.Implementations
         private IRepository<EligibilityCheck>? _eligibilityChecks;
         private IRepository<DefenseResult>? _defenseResults;
         private IRepository<AuditLog>? _auditLogs;
+        private IRepository<DefenseComment>? _defenseComments;
+        private IRepository<ProgressReport>? _progressReports;
         private bool _disposed = false;
 
         public UnitOfWork(AppDbContext context)
@@ -54,6 +56,12 @@ namespace PostgraduateManagement.Repositories.Implementations
 
         public IRepository<AuditLog> AuditLogs =>
             _auditLogs ??= new Repository<AuditLog>(_context);
+
+        public IRepository<DefenseComment> DefenseComments =>
+            _defenseComments ??= new Repository<DefenseComment>(_context);
+
+        public IRepository<ProgressReport> ProgressReports =>
+            _progressReports ??= new Repository<ProgressReport>(_context);
 
         /// <summary>
         /// Thực thi lưu toàn bộ thay đổi dữ liệu trong ngữ cảnh giao dịch

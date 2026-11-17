@@ -28,8 +28,9 @@ namespace PostgraduateManagement.Services.Interfaces
         /// <param name="personId">Mã định danh chuyên gia</param>
         /// <param name="role">Vai trò phân công</param>
         /// <param name="isExternal">Đánh dấu chuyên gia ngoài trường</param>
+        /// <param name="position">Chức danh trong hội đồng (chỉ dùng khi role = Committee, mặc định Ủy viên)</param>
         /// <returns>True nếu phân công thành công</returns>
-        Task<bool> AssignPersonAsync(int thesisId, int personId, AssignmentRole role, bool isExternal);
+        Task<bool> AssignPersonAsync(int thesisId, int personId, AssignmentRole role, bool isExternal, CommitteePosition? position = null);
 
         /// <summary>
         /// Lấy danh sách toàn bộ các phân công chuyên gia hiện có của một đề tài.

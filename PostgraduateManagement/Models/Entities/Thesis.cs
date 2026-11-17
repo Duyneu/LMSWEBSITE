@@ -99,5 +99,10 @@ namespace PostgraduateManagement.Models.Entities
         /// Danh mục các tài liệu số hóa đã nộp thuộc danh mục bắt buộc M05
         /// </summary>
         public virtual ICollection<SubmittedDocument> SubmittedDocuments { get; set; } = new List<SubmittedDocument>();
+
+        /// <summary>
+        /// Các báo cáo tiến độ thực hiện đề tài
+        /// </summary>
+        public virtual ICollection<ProgressReport> ProgressReports { get; set; } = new List<ProgressReport>();
     }
 }

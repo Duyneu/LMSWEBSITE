@@ -103,6 +103,73 @@
                 </form>
             </div>
         </div>
+
+        <!-- Nhận xét riêng của từng phản biện / thành viên hội đồng -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="card-title mb-0 fw-bold text-dark">
+                    <i class="bi bi-chat-square-text text-primary me-2"></i>Nhận xét của từng thành viên
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.MemberComments.Any())
+                {
+                    <ul class="list-group mb-4">
+                        @foreach (var c in Model.MemberComments)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                    <strong>@c.Person?.FullName</strong>
+                                    <span class="small text-muted">
+                                        @if (c.Score.HasValue)
+                                        {
+                                            <span class="badge bg-primary me-2">@c.Score.Value.ToString("F1")</span>
+                                        }
+                                        @c.RecordedAt.ToString("dd/MM/yyyy HH:mm") · @c.RecordedBy
+                                    </span>
+                                </div>
+                                <div class="mt-1" style="white-space: pre-line;">@c.Content</div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted small">Chưa có nhận xét riêng nào.</p>
+                }
+
+                @if (Model.CommentablePersons.Any())
+                {
+                    <form asp-action="AddMemberComment" method="post" class="border-top pt-3">
+                        <input type="hidden" name="sessionId" value="@Model.SessionId" />
+                        <div class="row g-3">
+                            <div class="col-12 col-md-8">
+                                <label for="memberPerson" class="form-label fw-semibold">Thành viên</label>
+                                <select id="memberPerson" name="personId" class="form-select" asp-items="Model.CommentablePersons"></select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="memberScore" class="form-label fw-semibold">Điểm (tùy chọn)</label>
+                                <input id="memberScore" name="score" type="number" step="0.1" min="0" max="10" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <label for="memberContent" class="form-label fw-semibold">Nội dung nhận xét</label>
+                                <textarea id="memberContent" name="content" rows="3" maxlength="2000" class="form-control" required></textarea>
+                                <div class="form-text">Nhập lại cho cùng thành viên sẽ cập nhật nhận xét cũ.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end pt-3">
+                            <button type="submit" class="btn btn-outline-primary fw-semibold">
+                                <i class="bi bi-plus-lg me-1"></i>Lưu nhận xét
+                            </button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">Đề tài chưa có phản biện hoặc thành viên hội đồng được phân công.</p>
+                }
+            </div>
+        </div>
     </div>
 </div>
 

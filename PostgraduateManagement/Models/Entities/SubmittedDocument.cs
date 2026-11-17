@@ -68,5 +68,10 @@ namespace PostgraduateManagement.Models.Entities
         /// </summary>
         [StringLength(100)]
         public string? ConfirmedBy { get; set; }
+
+        /// <summary>
+        /// Thời điểm xác nhận tài liệu (null nếu chưa xác nhận)
+        /// </summary>
+        public DateTime? ConfirmedAt { get; set; }
     }
 }

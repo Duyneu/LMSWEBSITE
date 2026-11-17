@@ -74,6 +74,7 @@ namespace PostgraduateManagement.Services.DTOs
         /// Vai trò được phân công (Supervisor, Reviewer, Committee)
         /// </summary>
         public AssignmentRole Role { get; set; }
+        public CommitteePosition? CommitteePosition { get; set; }
 
         /// <summary>
         /// Tên vai trò hiển thị tiếng Việt
@@ -82,7 +83,12 @@ namespace PostgraduateManagement.Services.DTOs
         {
             AssignmentRole.Supervisor => "Người hướng dẫn",
             AssignmentRole.Reviewer => "Người phản biện",
-            AssignmentRole.Committee => "Thành viên hội đồng",
+            AssignmentRole.Committee => CommitteePosition switch
+            {
+                Models.Enums.CommitteePosition.Chair => "Chủ tịch hội đồng",
+                Models.Enums.CommitteePosition.Secretary => "Thư ký hội đồng",
+                _ => "Ủy viên hội đồng"
+            },
             _ => Role.ToString()
         };
 

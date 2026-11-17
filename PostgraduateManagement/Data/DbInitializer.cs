@@ -270,6 +270,7 @@ namespace PostgraduateManagement.Data
                     ThesisId = theses[0].Id,
                     PersonId = persons[3].Id, // GS.TS. Hoàng Minh Sơn (Ngoài trường)
                     Role = AssignmentRole.Committee,
+                    CommitteePosition = CommitteePosition.Chair,
                     IsExternal = true,
                     AssignedAt = new DateTime(2026, 10, 1),
                     Notes = "Chủ tịch Hội đồng đánh giá Luận án Tiến sĩ"
@@ -299,6 +300,7 @@ namespace PostgraduateManagement.Data
                     ThesisId = theses[1].Id,
                     PersonId = persons[5].Id, // TS. Ngô Quốc Hưng (Ngoài trường)
                     Role = AssignmentRole.Committee,
+                    CommitteePosition = CommitteePosition.Chair,
                     IsExternal = true,
                     AssignedAt = new DateTime(2025, 1, 15),
                     Notes = "Ủy viên Hội đồng ngoài cơ sở đào tạo"
@@ -434,7 +436,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/ThuyetMinh_DeTai_LV2024002.pdf",
                     Version = 1,
                     UploadedAt = new DateTime(2024, 2, 1),
-                    ConfirmedBy = "Phòng Đào tạo Sau đại học"
+                    ConfirmedBy = "Phòng Đào tạo Sau đại học",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 },
                 new SubmittedDocument
                 {
@@ -444,7 +447,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/ToanVan_LuanVan_LV2024002_v2.pdf",
                     Version = 2,
                     UploadedAt = new DateTime(2025, 1, 10),
-                    ConfirmedBy = "Phòng Đào tạo Sau đại học"
+                    ConfirmedBy = "Phòng Đào tạo Sau đại học",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 },
                 new SubmittedDocument
                 {
@@ -454,7 +458,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/BienBanGiaiTrinhSuaDoi_LV2024002.pdf",
                     Version = 1,
                     UploadedAt = new DateTime(2025, 2, 20),
-                    ConfirmedBy = "Chủ tịch Hội đồng bảo vệ"
+                    ConfirmedBy = "Chủ tịch Hội đồng bảo vệ",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 },
 
                 // Đề tài 1 (LA-2023-001) nộp 2 loại bắt buộc -> Tỷ lệ số hóa 66.7%
@@ -466,7 +471,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/ThuyetMinh_LuanAn_LA2023001.pdf",
                     Version = 1,
                     UploadedAt = new DateTime(2023, 10, 5),
-                    ConfirmedBy = "Phòng Đào tạo Sau đại học"
+                    ConfirmedBy = "Phòng Đào tạo Sau đại học",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 },
                 new SubmittedDocument
                 {
@@ -476,7 +482,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/ToanVan_LuanAn_TienSi_LA2023001.pdf",
                     Version = 1,
                     UploadedAt = new DateTime(2026, 8, 20),
-                    ConfirmedBy = "Phòng Đào tạo Sau đại học"
+                    ConfirmedBy = "Phòng Đào tạo Sau đại học",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 },
 
                 // Đề tài 3 (DA-2024-003) nộp 1 loại bắt buộc -> Tỷ lệ số hóa 33.3%
@@ -488,7 +495,8 @@ namespace PostgraduateManagement.Data
                     FilePath = "/uploads/documents/ThuyetMinh_DeAn_DA2024003.pdf",
                     Version = 1,
                     UploadedAt = new DateTime(2024, 3, 5),
-                    ConfirmedBy = "Phòng Đào tạo Sau đại học"
+                    ConfirmedBy = "Phòng Đào tạo Sau đại học",
+                    ConfirmedAt = DateTime.UtcNow.AddDays(-3)
                 }
             };
             await context.SubmittedDocuments.AddRangeAsync(documents);

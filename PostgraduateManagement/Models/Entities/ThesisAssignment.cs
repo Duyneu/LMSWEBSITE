@@ -40,6 +40,7 @@ namespace PostgraduateManagement.Models.Entities
         /// </summary>
         [Required]
         public AssignmentRole Role { get; set; }
+        public CommitteePosition? CommitteePosition { get; set; }
 
         /// <summary>
         /// Đánh dấu chuyên gia ngoài trường tại thời điểm phân công

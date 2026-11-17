@@ -30,6 +30,7 @@ namespace PostgraduateManagement.ViewModels
         public int Version { get; set; }
         public DateTime UploadedAt { get; set; }
         public string? ConfirmedBy { get; set; }
+        public DateTime? ConfirmedAt { get; set; }
         public bool IsConfirmed => !string.IsNullOrEmpty(ConfirmedBy);
     }
 
