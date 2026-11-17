@@ -1,0 +1,86 @@
+@* File: Views/Expert/Index.cshtml *@
+@model PostgraduateManagement.ViewModels.ExpertListViewModel
+@{
+    ViewData["Title"] = "Chuyên gia & Cán bộ khoa học";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h2 class="h3 fw-bold text-dark mb-1">
+            <i class="bi bi-person-badge text-primary me-2"></i>Chuyên gia &amp; Cán bộ khoa học
+        </h2>
+        <p class="text-muted mb-0">Cán bộ cơ hữu và chuyên gia ngoài trường, dùng cho thẩm định, phân công và gợi ý phản biện</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary fw-semibold">
+        <i class="bi bi-plus-lg me-1"></i>Thêm chuyên gia
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header py-3">
+        <form asp-action="Index" method="get" class="d-flex flex-wrap gap-2" role="search">
+            <input name="search" value="@Model.Search" class="form-control flex-grow-1 w-auto" placeholder="Tìm theo họ tên, mã nhân sự, lĩnh vực..." aria-label="Tìm kiếm chuyên gia" />
+            <select name="isExternal" class="form-select w-auto" aria-label="Lọc theo đơn vị">
+                <option value="" selected="@(Model.IsExternal == null)">Tất cả</option>
+                <option value="false" selected="@(Model.IsExternal == false)">Cơ hữu</option>
+                <option value="true" selected="@(Model.IsExternal == true)">Ngoài trường</option>
+            </select>
+            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã nhân sự</th>
+                    <th>Họ và tên</th>
+                    <th>Học hàm/vị</th>
+                    <th>Lĩnh vực nghiên cứu</th>
+                    <th>Đơn vị</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Experts.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Không có chuyên gia nào.</td></tr>
+                }
+                @foreach (var p in Model.Experts)
+                {
+                    <tr>
+                        <td class="font-monospace">@(p.SharedPersonCode ?? "—")</td>
+                        <td>
+                            <div class="fw-semibold">@p.FullName</div>
+                            <div class="small text-muted">@p.Email</div>
+                        </td>
+                        <td><span class="badge bg-secondary">@p.AcademicDegree</span></td>
+                        <td>@p.ResearchField</td>
+                        <td>
+                            @if (p.IsExternal)
+                            {
+                                <span class="badge bg-warning text-dark">Ngoài trường</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">Cơ hữu</span>
+                            }
+                            @if (!string.IsNullOrEmpty(p.Workplace))
+                            {
+                                <div class="small text-muted">@p.Workplace</div>
+                            }
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Sửa
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@p.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('Xóa chuyên gia này?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
