@@ -133,12 +133,76 @@ namespace PostgraduateManagement.Controllers
         }
 
         /// <summary>
+        /// Phạm vi truy cập tài liệu của một đề tài (Scope Check), dùng chung cho mọi thao tác tài liệu:
+        /// - Admin / Manager: toàn bộ đề tài.
+        /// - Student: chỉ đề tài của chính mình.
+        /// - Faculty: chỉ đề tài mình là Người hướng dẫn.
+        /// - Committee: chỉ đề tài mình được phân công Phản biện hoặc Hội đồng.
+        /// Đề tài phải được nạp kèm Student và Assignments.Person.
+        /// </summary>
+        private bool CanAccessThesis(Thesis thesis)
+        {
+            if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                return true;
+            }
+
+            var userName = User.Identity?.Name ?? string.Empty;
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? userName;
+            bool IsMe(string? email, string? sharedCode) =>
+                string.Equals(email, userName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(sharedCode, userName, StringComparison.OrdinalIgnoreCase)
+                || (!string.IsNullOrEmpty(userEmail) && string.Equals(email, userEmail, StringComparison.OrdinalIgnoreCase));
+
+            if (User.IsInRole("Student"))
+            {
+                return thesis.Student != null && IsMe(thesis.Student.Email, thesis.Student.SharedStudentCode);
+            }
+
+            if (User.IsInRole("Faculty"))
+            {
+                return thesis.Assignments.Any(a => a.Role == AssignmentRole.Supervisor
+                    && a.Person != null && IsMe(a.Person.Email, a.Person.SharedPersonCode));
+            }
+
+            if (User.IsInRole("Committee"))
+            {
+                return thesis.Assignments.Any(a => (a.Role == AssignmentRole.Reviewer || a.Role == AssignmentRole.Committee)
+                    && a.Person != null && IsMe(a.Person.Email, a.Person.SharedPersonCode));
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Hiển thị màn hình quản lý tài liệu số hóa và dashboard tiến độ số hóa 3 loại văn bản bắt buộc M05.
+        /// Chỉ liệt kê và hiển thị các đề tài thuộc phạm vi truy cập của người dùng.
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> Index(int? thesisId)
         {
-            var allTheses = (await _unitOfWork.Theses.GetAllAsync()).OrderBy(t => t.Code).ToList();
+            List<Thesis> allTheses;
+            if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                allTheses = (await _unitOfWork.Theses.GetAllAsync()).OrderBy(t => t.Code).ToList();
+            }
+            else
+            {
+                // shortcut: one query per thesis to load its owner and assignments; fine for a department's few hundred theses, move to a filtered query if the list grows
+                allTheses = new List<Thesis>();
+                foreach (var t in await _unitOfWork.Theses.GetAllAsync())
+                {
+                    var detailed = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(t.Id);
+                    if (detailed != null && CanAccessThesis(detailed)) allTheses.Add(detailed);
+                }
+                allTheses = allTheses.OrderBy(t => t.Code).ToList();
+            }
+
+            if (thesisId.HasValue && !allTheses.Any(t => t.Id == thesisId.Value))
+            {
+                _logger.LogWarning("Từ chối truy cập: Người dùng '{User}' không có quyền xem tài liệu của đề tài {ThesisId}", User.Identity?.Name, thesisId.Value);
+                return Forbid();
+            }
 
             if (!thesisId.HasValue && allTheses.Any())
             {
@@ -204,11 +268,16 @@ namespace PostgraduateManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Upload(int thesisId)
         {
-            var thesis = await _unitOfWork.Theses.GetByIdAsync(thesisId);
+            var thesis = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(thesisId);
             if (thesis == null)
             {
                 _logger.LogWarning("Không tìm thấy đề tài với ID = {ThesisId}", thesisId);
                 return NotFound();
+            }
+
+            if (!CanAccessThesis(thesis))
+            {
+                return Forbid();
             }
 
             var model = new UploadDocumentViewModel
@@ -230,7 +299,19 @@ namespace PostgraduateManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(UploadDocumentViewModel model)
         {
-            if ((await _unitOfWork.Theses.GetByIdAsync(model.ThesisId))?.ThesisStatus == ThesisStatus.Archived)
+            var targetThesis = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(model.ThesisId);
+            if (targetThesis == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanAccessThesis(targetThesis))
+            {
+                _logger.LogWarning("Từ chối tải lên: Người dùng '{User}' không có quyền với đề tài {ThesisId}", User.Identity?.Name, model.ThesisId);
+                return Forbid();
+            }
+
+            if (targetThesis.ThesisStatus == ThesisStatus.Archived)
             {
                 TempData["ErrorMessage"] = "Đề tài đã lưu trữ, không nhận thêm tài liệu.";
                 return RedirectToAction(nameof(Index), new { thesisId = model.ThesisId });
@@ -370,66 +451,9 @@ namespace PostgraduateManagement.Controllers
             }
 
             // Phân quyền truy cập theo phạm vi đề tài (Scope Check)
-            var userName = User.Identity?.Name ?? string.Empty;
-            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? userName;
-
-            if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            if (document.Thesis == null || !CanAccessThesis(document.Thesis))
             {
-                // Toàn quyền quản trị và quản lý
-            }
-            else if (User.IsInRole("Student"))
-            {
-                var student = document.Thesis?.Student;
-                if (student == null)
-                {
-                    return Forbid();
-                }
-
-                bool matches = string.Equals(student.Email, userName, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(student.SharedStudentCode, userName, StringComparison.OrdinalIgnoreCase)
-                    || (!string.IsNullOrEmpty(userEmail) && string.Equals(student.Email, userEmail, StringComparison.OrdinalIgnoreCase));
-
-                if (!matches)
-                {
-                    _logger.LogWarning("Học viên {User} không có quyền tải tài liệu #{Id} của đề tài {ThesisCode}", userName, id, document.Thesis?.Code);
-                    return Forbid();
-                }
-            }
-            else if (User.IsInRole("Faculty"))
-            {
-                var assignments = document.Thesis?.Assignments ?? Enumerable.Empty<ThesisAssignment>();
-                bool isSupervisor = assignments.Any(a =>
-                    a.Role == AssignmentRole.Supervisor &&
-                    a.Person != null &&
-                    (string.Equals(a.Person.Email, userName, StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(a.Person.SharedPersonCode, userName, StringComparison.OrdinalIgnoreCase) ||
-                     (!string.IsNullOrEmpty(userEmail) && string.Equals(a.Person.Email, userEmail, StringComparison.OrdinalIgnoreCase))));
-
-                if (!isSupervisor)
-                {
-                    _logger.LogWarning("Cán bộ/Giảng viên {User} không phải là người hướng dẫn của đề tài {ThesisCode}, bị từ chối tải tài liệu #{Id}", userName, document.Thesis?.Code, id);
-                    return Forbid();
-                }
-            }
-            else if (User.IsInRole("Committee"))
-            {
-                var assignments = document.Thesis?.Assignments ?? Enumerable.Empty<ThesisAssignment>();
-                bool isReviewerOrCommittee = assignments.Any(a =>
-                    (a.Role == AssignmentRole.Reviewer || a.Role == AssignmentRole.Committee) &&
-                    a.Person != null &&
-                    (string.Equals(a.Person.Email, userName, StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(a.Person.SharedPersonCode, userName, StringComparison.OrdinalIgnoreCase) ||
-                     (!string.IsNullOrEmpty(userEmail) && string.Equals(a.Person.Email, userEmail, StringComparison.OrdinalIgnoreCase))));
-
-                if (!isReviewerOrCommittee)
-                {
-                    _logger.LogWarning("Thành viên {User} không thuộc danh sách phản biện/hội đồng của đề tài {ThesisCode}, bị từ chối tải tài liệu #{Id}", userName, document.Thesis?.Code, id);
-                    return Forbid();
-                }
-            }
-            else
-            {
-                _logger.LogWarning("Người dùng {User} không có vai trò hợp lệ để tải tài liệu #{Id}", userName, id);
+                _logger.LogWarning("Người dùng {User} không có quyền tải tài liệu #{Id} của đề tài {ThesisCode}", User.Identity?.Name, id, document.Thesis?.Code);
                 return Forbid();
             }
 
@@ -456,6 +480,19 @@ namespace PostgraduateManagement.Controllers
         [Authorize(Roles = "Admin,Manager,Committee")]
         public async Task<IActionResult> Confirm(int documentId, int thesisId)
         {
+            var document = await _unitOfWork.SubmittedDocuments.GetDocumentWithDetailsAsync(documentId);
+            if (document == null)
+            {
+                return NotFound();
+            }
+
+            // Thành viên hội đồng chỉ duyệt tài liệu của đề tài mình được phân công
+            if (document.Thesis == null || !CanAccessThesis(document.Thesis))
+            {
+                _logger.LogWarning("Từ chối duyệt: Người dùng '{User}' không có quyền với tài liệu #{DocumentId}", User.Identity?.Name, documentId);
+                return Forbid();
+            }
+
             try
             {
                 var confirmer = User.Identity?.Name ?? "Hội đồng Sau đại học";
@@ -489,6 +526,11 @@ namespace PostgraduateManagement.Controllers
             if (thesis == null)
             {
                 return NotFound();
+            }
+
+            if (!CanAccessThesis(thesis))
+            {
+                return Forbid();
             }
 
             var progress = await _defenseService.GetDigitizationProgressAsync(thesisId);
