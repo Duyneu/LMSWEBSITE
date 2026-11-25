@@ -1,0 +1,10 @@
+# Render Blueprint: deploys the app from the existing Dockerfile on the free plan.
+# The Dockerfile already listens on $PORT (Render sets it) and trusts forwarded HTTPS headers.
+services:
+  - type: web
+    name: lmswebsite
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /Account/Login
+    autoDeploy: true
