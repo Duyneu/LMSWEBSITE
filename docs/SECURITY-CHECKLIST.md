@@ -2,6 +2,10 @@
 
 Trạng thái: **Có** = đã làm và có bằng chứng; **Một phần** = làm một phần, nêu rõ phần thiếu; **Không** = chưa làm; **N/A** = không có đối tượng tương ứng trong ứng dụng.
 
+## A. Bảo mật SQL Server (mục 1–8)
+
+Có script T-SQL trong [docs/sql](sql/README.md), đã chạy trên LocalDB: mục 1, 2, 3, 4, 5 đạt; mục 7 và 8 đạt một phần (bản mã hóa backup và error log cần instance đầy đủ); mục 6 (TDE) không chạy được trên Express/LocalDB, cần Developer, Standard hoặc Enterprise.
+
 ## B. Bảo mật lập trình ASP.NET
 
 | # | Mục | Trạng thái | Ở đâu / ghi chú |
