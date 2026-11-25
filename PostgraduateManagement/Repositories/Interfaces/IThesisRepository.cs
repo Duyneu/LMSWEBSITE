@@ -19,7 +19,7 @@ namespace PostgraduateManagement.Repositories.Interfaces
         /// <param name="page">Số trang hiện tại (bắt đầu từ 1)</param>
         /// <param name="pageSize">Số lượng bản ghi trên một trang</param>
         /// <returns>Danh sách đề tài thỏa mãn điều kiện</returns>
-        Task<IEnumerable<Thesis>> GetThesesWithDetailsAsync(string? search, ThesisStatus? status, ThesisType? type, int page, int pageSize);
+        Task<IEnumerable<Thesis>> GetThesesWithDetailsAsync(string? search, ThesisStatus? status, ThesisType? type, int page, int pageSize, IReadOnlyCollection<int>? allowedIds);
 
         /// <summary>
         /// Đếm tổng số lượng đề tài thỏa mãn điều kiện tìm kiếm và bộ lọc để phục vụ phân trang.
@@ -28,7 +28,7 @@ namespace PostgraduateManagement.Repositories.Interfaces
         /// <param name="status">Lọc theo trạng thái đề tài</param>
         /// <param name="type">Lọc theo loại hình đề tài</param>
         /// <returns>Tổng số bản ghi thỏa mãn</returns>
-        Task<int> GetThesesCountAsync(string? search, ThesisStatus? status, ThesisType? type);
+        Task<int> GetThesesCountAsync(string? search, ThesisStatus? status, ThesisType? type, IReadOnlyCollection<int>? allowedIds);
 
         /// <summary>
         /// Lấy thông tin chi tiết đầy đủ của một đề tài bao gồm người học, phân công (kèm chuyên gia), thẩm định điều kiện, phiên bảo vệ (kèm kết quả) và tài liệu nộp.

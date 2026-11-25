@@ -32,5 +32,10 @@ namespace PostgraduateManagement.Services.DTOs
         /// Số lượng bản ghi trên một trang (mặc định 10 bản ghi)
         /// </summary>
         public int PageSize { get; set; } = 10;
+
+        /// <summary>
+        /// Chỉ trả về các đề tài có Id trong danh sách này (phạm vi truy cập của người dùng). Null = không giới hạn.
+        /// </summary>
+        public IReadOnlyCollection<int>? AllowedThesisIds { get; set; }
     }
 }

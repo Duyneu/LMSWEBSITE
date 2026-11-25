@@ -25,9 +25,16 @@ namespace PostgraduateManagement.Repositories.Implementations
             ThesisStatus? status,
             ThesisType? type,
             int page,
-            int pageSize)
+            int pageSize,
+            IReadOnlyCollection<int>? allowedIds)
         {
             var query = _context.Theses.AsQueryable();
+
+            // Phạm vi truy cập: null = tất cả, ngược lại chỉ các đề tài trong danh sách được phép
+            if (allowedIds != null)
+            {
+                query = query.Where(t => allowedIds.Contains(t.Id));
+            }
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -68,9 +75,15 @@ namespace PostgraduateManagement.Repositories.Implementations
         /// <summary>
         /// Đếm tổng số lượng đề tài thỏa mãn điều kiện tìm kiếm và bộ lọc
         /// </summary>
-        public async Task<int> GetThesesCountAsync(string? search, ThesisStatus? status, ThesisType? type)
+        public async Task<int> GetThesesCountAsync(string? search, ThesisStatus? status, ThesisType? type, IReadOnlyCollection<int>? allowedIds)
         {
             var query = _context.Theses.AsQueryable();
+
+            // Phạm vi truy cập: null = tất cả, ngược lại chỉ các đề tài trong danh sách được phép
+            if (allowedIds != null)
+            {
+                query = query.Where(t => allowedIds.Contains(t.Id));
+            }
 
             if (!string.IsNullOrWhiteSpace(search))
             {

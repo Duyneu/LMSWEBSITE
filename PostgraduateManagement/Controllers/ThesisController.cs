@@ -36,6 +36,23 @@ namespace PostgraduateManagement.Controllers
         }
 
         /// <summary>
+        /// Admin/Manager thấy mọi đề tài (null); vai trò khác chỉ thấy đề tài thuộc phạm vi của mình.
+        /// </summary>
+        private async Task<IReadOnlyCollection<int>?> GetAllowedThesisIdsAsync()
+        {
+            if (User.IsInRole("Admin") || User.IsInRole("Manager")) return null;
+
+            // shortcut: one query per thesis to load owner and assignments; fine for a department's few hundred theses, move to a filtered query if the list grows
+            var ids = new List<int>();
+            foreach (var t in await _unitOfWork.Theses.GetAllAsync())
+            {
+                var detailed = await _unitOfWork.Theses.GetThesisWithFullDetailsAsync(t.Id);
+                if (detailed != null && ThesisAccess.CanAccess(User, detailed)) ids.Add(detailed.Id);
+            }
+            return ids;
+        }
+
+        /// <summary>
         /// Hiển thị danh sách đề tài sau đại học kèm tìm kiếm, lọc theo trạng thái/loại hình và phân trang.
         /// </summary>
         [HttpGet]
@@ -52,7 +69,8 @@ namespace PostgraduateManagement.Controllers
                 Status = status,
                 Type = type,
                 PageNumber = page,
-                PageSize = pageSize
+                PageSize = pageSize,
+                AllowedThesisIds = await GetAllowedThesisIdsAsync()
             };
 
             var pagedResult = await _thesisService.GetThesesAsync(filter);

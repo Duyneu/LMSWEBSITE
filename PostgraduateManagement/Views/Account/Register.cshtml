@@ -36,6 +36,7 @@
                     <div class="mb-3">
                         <label asp-for="Password" class="form-label fw-semibold text-dark">Mật khẩu <span class="text-danger">*</span></label>
                         <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" required />
+                        <div class="form-text">Ít nhất 12 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt.</div>
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
@@ -46,18 +47,6 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
 
-                    <!-- Vai trò người dùng -->
-                    <div class="mb-4">
-                        <label asp-for="Role" class="form-label fw-semibold text-dark">Vai trò trong hệ thống <span class="text-danger">*</span></label>
-                        <select asp-for="Role" class="form-select">
-                            <option value="Student">Học viên sau đại học (Student)</option>
-                            <option value="Faculty">Cán bộ / Giảng viên (Faculty)</option>
-                            <option value="Committee">Thành viên Hội đồng (Committee)</option>
-                            <option value="Manager">Quản lý đào tạo (Manager)</option>
-                            <option value="Admin">Quản trị viên (Admin)</option>
-                        </select>
-                        <span asp-validation-for="Role" class="text-danger small"></span>
-                    </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm mb-3">
                         Hoàn tất Đăng ký

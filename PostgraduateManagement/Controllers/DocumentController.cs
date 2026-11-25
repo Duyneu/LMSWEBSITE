@@ -140,39 +140,7 @@ namespace PostgraduateManagement.Controllers
         /// - Committee: chỉ đề tài mình được phân công Phản biện hoặc Hội đồng.
         /// Đề tài phải được nạp kèm Student và Assignments.Person.
         /// </summary>
-        private bool CanAccessThesis(Thesis thesis)
-        {
-            if (User.IsInRole("Admin") || User.IsInRole("Manager"))
-            {
-                return true;
-            }
-
-            var userName = User.Identity?.Name ?? string.Empty;
-            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? userName;
-            bool IsMe(string? email, string? sharedCode) =>
-                string.Equals(email, userName, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(sharedCode, userName, StringComparison.OrdinalIgnoreCase)
-                || (!string.IsNullOrEmpty(userEmail) && string.Equals(email, userEmail, StringComparison.OrdinalIgnoreCase));
-
-            if (User.IsInRole("Student"))
-            {
-                return thesis.Student != null && IsMe(thesis.Student.Email, thesis.Student.SharedStudentCode);
-            }
-
-            if (User.IsInRole("Faculty"))
-            {
-                return thesis.Assignments.Any(a => a.Role == AssignmentRole.Supervisor
-                    && a.Person != null && IsMe(a.Person.Email, a.Person.SharedPersonCode));
-            }
-
-            if (User.IsInRole("Committee"))
-            {
-                return thesis.Assignments.Any(a => (a.Role == AssignmentRole.Reviewer || a.Role == AssignmentRole.Committee)
-                    && a.Person != null && IsMe(a.Person.Email, a.Person.SharedPersonCode));
-            }
-
-            return false;
-        }
+        private bool CanAccessThesis(Thesis thesis) => ThesisAccess.CanAccess(User, thesis);
 
         /// <summary>
         /// Hiển thị màn hình quản lý tài liệu số hóa và dashboard tiến độ số hóa 3 loại văn bản bắt buộc M05.

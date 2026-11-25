@@ -37,13 +37,14 @@ namespace PostgraduateManagement.Services.Implementations
         public async Task<PagedResult<ThesisDto>> GetThesesAsync(ThesisFilterDto filter)
         {
             var pageNumber = filter.PageNumber < 1 ? 1 : filter.PageNumber;
-            var pageSize = filter.PageSize < 1 ? 10 : filter.PageSize;
+            // Giới hạn kích thước trang để một yêu cầu không kéo cả bảng về (chống truy vấn nặng)
+            var pageSize = filter.PageSize < 1 ? 10 : Math.Min(filter.PageSize, 50);
 
             var entities = await _unitOfWork.Theses.GetThesesWithDetailsAsync(
-                filter.Search, filter.Status, filter.Type, pageNumber, pageSize);
+                filter.Search, filter.Status, filter.Type, pageNumber, pageSize, filter.AllowedThesisIds);
 
             var totalCount = await _unitOfWork.Theses.GetThesesCountAsync(
-                filter.Search, filter.Status, filter.Type);
+                filter.Search, filter.Status, filter.Type, filter.AllowedThesisIds);
 
             var dtos = entities.Select(t => new ThesisDto
             {

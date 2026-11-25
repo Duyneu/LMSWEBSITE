@@ -12,6 +12,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
             <li class="dropdown-header text-muted">Tài khoản hệ thống</li>
+            <li><a class="dropdown-item rounded" asp-controller="Account" asp-action="ChangePassword">Đổi mật khẩu</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
                 <form class="px-2" asp-controller="Account" asp-action="Logout" method="post">

@@ -38,7 +38,7 @@ namespace PostgraduateManagement.Data
             }
 
             // 3. Khởi tạo tài khoản mẫu (Identity Users)
-            await SeedUsersAsync(userManager);
+            await SeedUsersAsync(userManager, scope.ServiceProvider.GetRequiredService<IConfiguration>()["Seed:DefaultPassword"] ?? "Password123!");
 
             // 4. Nếu đã có dữ liệu học viên thì không nạp lại
             if (await context.PostgraduateStudents.AnyAsync())
@@ -506,7 +506,7 @@ namespace PostgraduateManagement.Data
         /// <summary>
         /// Khởi tạo các tài khoản người dùng mẫu cho từng vai trò
         /// </summary>
-        private static async Task SeedUsersAsync(UserManager<IdentityUser> userManager)
+        private static async Task SeedUsersAsync(UserManager<IdentityUser> userManager, string defaultPassword)
         {
             var demoUsers = new[]
             {
@@ -528,7 +528,7 @@ namespace PostgraduateManagement.Data
                         Email = item.Email,
                         EmailConfirmed = true
                     };
-                    var result = await userManager.CreateAsync(user, "Password123!");
+                    var result = await userManager.CreateAsync(user, defaultPassword);
                     if (result.Succeeded)
                     {
                         await userManager.AddToRoleAsync(user, item.Role);

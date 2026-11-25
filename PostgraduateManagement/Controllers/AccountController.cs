@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 using PostgraduateManagement.ViewModels;
 
@@ -53,6 +54,7 @@ namespace PostgraduateManagement.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -108,7 +110,43 @@ namespace PostgraduateManagement.Controllers
         [HttpGet]
         public IActionResult AccessDenied()
         {
+            _logger.LogWarning("Truy cập trái phép: người dùng {User} bị từ chối tại {Path}",
+                User.Identity?.Name ?? "(ẩn danh)", Request.Query["ReturnUrl"].ToString());
             return View();
+        }
+
+        /// <summary>
+        /// Giao diện đổi mật khẩu cho người dùng đang đăng nhập.
+        /// </summary>
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword() => View(new ChangePasswordViewModel());
+
+        /// <summary>
+        /// Đổi mật khẩu: Identity kiểm tra mật khẩu cũ và áp dụng chính sách mật khẩu mạnh cho mật khẩu mới.
+        /// </summary>
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                _logger.LogWarning("Đổi mật khẩu không thành công cho {User}", user.UserName);
+                foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
+            }
+
+            // Làm mới cookie để phiên cũ gắn với mật khẩu trước không còn hiệu lực
+            await _signInManager.RefreshSignInAsync(user);
+            _logger.LogInformation("Người dùng {User} đã đổi mật khẩu.", user.UserName);
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công.";
+            return RedirectToAction("Index", "Thesis");
         }
 
         /// <summary>
